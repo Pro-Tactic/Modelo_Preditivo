@@ -1,0 +1,117 @@
+﻿liga,grupo,posicao,time,jogos,vitorias,empates,derrotas,gols_pro,gols_contra,saldo,pontos
+Africa Cup of Nations,Group A,1,Morocco,3,2,1,0,6,1,,7
+Africa Cup of Nations,Group A,2,Mali,3,0,3,0,2,2,,3
+Africa Cup of Nations,Group A,3,Comoros,3,0,2,1,0,2,,2
+Africa Cup of Nations,Group A,4,Zambia,3,0,2,1,1,4,,2
+Africa Cup of Nations,Group B,1,Egypt,3,2,1,0,3,1,,7
+Africa Cup of Nations,Group B,2,South Africa,3,2,0,1,5,4,,6
+Africa Cup of Nations,Group B,3,Angola,3,0,2,1,2,3,,2
+Africa Cup of Nations,Group B,4,Zimbabwe,3,0,1,2,4,6,,1
+Africa Cup of Nations,Group C,1,Nigeria,3,3,0,0,8,4,,9
+Africa Cup of Nations,Group C,2,Tunisia,3,1,1,1,6,5,,4
+Africa Cup of Nations,Group C,3,Tanzania,3,0,2,1,3,4,,2
+Africa Cup of Nations,Group C,4,Uganda,3,0,1,2,3,7,,1
+Africa Cup of Nations,Group D,1,Senegal,3,2,1,0,7,1,,7
+Africa Cup of Nations,Group D,2,DR Congo,3,2,1,0,5,1,,7
+Africa Cup of Nations,Group D,3,Benin,3,1,0,2,1,4,,3
+Africa Cup of Nations,Group D,4,Botswana,3,0,0,3,0,7,,0
+Africa Cup of Nations,Group E,1,Algeria,3,3,0,0,7,1,,9
+Africa Cup of Nations,Group E,2,Burkina Faso,3,2,0,1,4,2,,6
+Africa Cup of Nations,Group E,3,Sudan,3,1,0,2,1,5,,3
+Africa Cup of Nations,Group E,4,Equatorial Guinea,3,0,0,3,2,6,,0
+Africa Cup of Nations,Group F,1,Côte d'Ivoire,3,2,1,0,5,3,,7
+Africa Cup of Nations,Group F,2,Cameroon,3,2,1,0,4,2,,7
+Africa Cup of Nations,Group F,3,Mozambique,3,1,0,2,4,5,,3
+Africa Cup of Nations,Group F,4,Gabon,3,0,0,3,4,7,,0
+Africa Cup of Nations,Third-placed teams,1,Mozambique,3,1,0,2,4,5,,3
+Africa Cup of Nations,Third-placed teams,2,Benin,3,1,0,2,1,4,,3
+Africa Cup of Nations,Third-placed teams,3,Sudan,3,1,0,2,1,5,,3
+Africa Cup of Nations,Third-placed teams,4,Tanzania,3,0,2,1,3,4,,2
+Africa Cup of Nations,Third-placed teams,5,Angola,3,0,2,1,2,3,,2
+Africa Cup of Nations,Third-placed teams,6,Comoros,3,0,2,1,0,2,,2
+Copa América,Group A,1,Argentina,3,3,0,0,5,0,,9
+Copa América,Group A,2,Canada,3,1,1,1,1,2,,4
+Copa América,Group A,3,Chile,3,0,2,1,0,1,,2
+Copa América,Group A,4,Peru,3,0,1,2,0,3,,1
+Copa América,Group B,1,Venezuela,3,3,0,0,6,1,,9
+Copa América,Group B,2,Ecuador,3,1,1,1,4,3,,4
+Copa América,Group B,3,Mexico,3,1,1,1,1,1,,4
+Copa América,Group B,4,Jamaica,3,0,0,3,1,7,,0
+Copa América,Group C,1,Uruguay,3,3,0,0,9,1,,9
+Copa América,Group C,2,Panama,3,2,0,1,6,5,,6
+Copa América,Group C,3,USA,3,1,0,2,3,3,,3
+Copa América,Group C,4,Bolivia,3,0,0,3,1,10,,0
+Copa América,Group D,1,Colombia,3,2,1,0,6,2,,7
+Copa América,Group D,2,Brazil,3,1,2,0,5,2,,5
+Copa América,Group D,3,Costa Rica,3,1,1,1,2,4,,4
+Copa América,Group D,4,Paraguay,3,0,0,3,3,8,,0
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group A",1,Qatar,6,5,1,0,18,3,,16
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group A",2,Kuwait,6,2,1,3,6,6,,7
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group A",3,India,6,1,2,3,3,7,,5
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group A",4,Afghanistan,6,1,2,3,3,14,,5
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group B",1,Japan,6,6,0,0,24,0,,18
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group B",2,North Korea,6,3,0,3,11,7,,9
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group B",3,Syria,6,2,1,3,9,12,,7
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group B",4,Myanmar,6,0,1,5,3,28,,1
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group C",1,South Korea,6,5,1,0,20,1,,16
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group C",2,China,6,2,2,2,9,9,,8
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group C",3,Thailand,6,2,2,2,9,9,,8
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group C",4,Singapore,6,0,1,5,5,24,,1
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group D",1,Oman,6,4,1,1,11,2,,13
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group D",2,Kyrgyzstan,6,3,2,1,13,7,,11
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group D",3,Malaysia,6,3,1,2,9,9,,10
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group D",4,Chinese Taipei,6,0,0,6,2,17,,0
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group E",1,Iran,6,4,2,0,16,4,,14
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group E",2,Uzbekistan,6,4,2,0,13,4,,14
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group E",3,Turkmenistan,6,0,2,4,4,14,,2
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group E",4,Hong Kong,6,0,2,4,4,15,,2
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group F",1,Iraq,6,6,0,0,17,2,,18
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group F",2,Indonesia,6,3,1,2,8,8,,10
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group F",3,Vietnam,6,2,0,4,6,10,,6
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group F",4,Philippines,6,0,1,5,3,14,,1
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group G",1,Jordan,6,4,1,1,16,4,,13
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group G",2,Saudi Arabia,6,4,1,1,12,3,,13
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group G",3,Tajikistan,6,2,2,2,11,7,,8
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group G",4,Pakistan,6,0,0,6,1,26,,0
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group H",1,United Arab Emirates,6,5,1,0,16,2,,16
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group H",2,Bahrain,6,3,2,1,11,3,,11
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group H",3,Yemen,6,1,2,3,5,9,,5
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group H",4,Nepal,6,0,1,5,2,20,,1
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group I",1,Australia,6,6,0,0,22,0,,18
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group I",2,Palestine,6,2,2,2,6,6,,8
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group I",3,Lebanon,6,1,3,2,5,8,,6
+World Cup Qual. CAF,"AFC Qualification, Round 2, Group I",4,Bangladesh,6,0,1,5,1,20,,1
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group A",1,Iran,10,7,2,1,19,8,,23
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group A",2,Uzbekistan,10,6,3,1,14,7,,21
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group A",3,United Arab Emirates,10,4,3,3,15,8,,15
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group A",4,Qatar,10,4,1,5,17,24,,13
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group A",5,Kyrgyzstan,10,2,2,6,12,18,,8
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group A",6,North Korea,10,0,3,7,9,21,,3
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group B",1,South Korea,10,6,4,0,20,7,,22
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group B",2,Jordan,10,4,4,2,16,8,,16
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group B",3,Iraq,10,4,3,3,9,9,,15
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group B",4,Oman,10,3,2,5,9,14,,11
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group B",5,Palestine,10,2,4,4,10,13,,10
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group B",6,Kuwait,10,0,5,5,7,20,,5
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group C",1,Japan,10,7,2,1,30,3,,23
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group C",2,Australia,10,5,4,1,16,7,,19
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group C",3,Saudi Arabia,10,3,4,3,7,8,,13
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group C",4,Indonesia,10,3,3,4,9,20,,12
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group C",5,China,10,3,0,7,7,20,,9
+World Cup Qual. CAF,"AFC Qualification, Round 3, Group C",6,Bahrain,10,1,3,6,5,16,,6
+World Cup Qual. CAF,"AFC Qualification, Round 4, Group A",1,Qatar,2,1,1,0,2,1,,4
+World Cup Qual. CAF,"AFC Qualification, Round 4, Group A",2,United Arab Emirates,2,1,0,1,3,3,,3
+World Cup Qual. CAF,"AFC Qualification, Round 4, Group A",3,Oman,2,0,1,1,1,2,,1
+World Cup Qual. CAF,"AFC Qualification, Round 4, Group B",1,Saudi Arabia,2,1,1,0,3,2,,4
+World Cup Qual. CAF,"AFC Qualification, Round 4, Group B",2,Iraq,2,1,1,0,1,0,,4
+World Cup Qual. CAF,"AFC Qualification, Round 4, Group B",3,Indonesia,2,0,0,2,2,4,,0
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",1,Argentina,18,12,2,4,31,10,,38
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",2,Ecuador,18,8,8,2,14,5,,29
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",3,Colombia,18,7,7,4,28,18,,28
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",4,Uruguay,18,7,7,4,22,12,,28
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",5,Brazil,18,8,4,6,24,17,,28
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",6,Paraguay,18,7,7,4,14,10,,28
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",7,Bolivia,18,6,2,10,17,35,,20
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",8,Venezuela,18,4,6,8,18,28,,18
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",9,Peru,18,2,6,10,6,21,,12
+World Cup Qual. CONMEBOL,"Qualification, CONMEBOL",10,Chile,18,2,5,11,9,27,,11
