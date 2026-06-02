@@ -149,13 +149,14 @@ def calcular_forcas():
         pts_casa = obter_pontos_fifa(t_casa)
         pts_fora = obter_pontos_fifa(t_fora)
         
-        # O gol marcado ganha um multiplicador baseado na força de quem sofreu
-        gol_ajustado_casa = g1 * (pts_fora / 1500.0)
-        gol_ajustado_fora = g2 * (pts_casa / 1500.0)
+        # O gol marcado ganha um multiplicador exponencial baseado na força de quem sofreu
+        # Potência 2.5 pune severamente vitórias fáceis em continentes mais fracos
+        gol_ajustado_casa = g1 * ((pts_fora / 1500.0) ** 2.5)
+        gol_ajustado_fora = g2 * ((pts_casa / 1500.0) ** 2.5)
         
-        # O gol sofrido dói mais se vier de um time fraco (inverso)
-        def_ajustada_casa = g2 * (1500.0 / max(500, pts_fora))
-        def_ajustada_fora = g1 * (1500.0 / max(500, pts_casa))
+        # O gol sofrido dói exponencialmente mais se vier de um time fraco (inverso)
+        def_ajustada_casa = g2 * ((1500.0 / max(500, pts_fora)) ** 2.5)
+        def_ajustada_fora = g1 * ((1500.0 / max(500, pts_casa)) ** 2.5)
         
         forcas_ataque[t_casa] += (gol_ajustado_casa * peso)
         pesos_ataque[t_casa] += peso
@@ -173,9 +174,15 @@ def calcular_forcas():
         if pesos_ataque[time] > 0:
             atk = forcas_ataque[time] / pesos_ataque[time]
             df = forcas_defesa[time] / pesos_defesa[time]
-            # Normalizar pela média de gols para calibrar xG
-            forca_ataque_global[time] = atk / MEDIA_GOLS_LIGA
-            forca_defesa_global[time] = df / MEDIA_GOLS_LIGA
+            
+            # Normalizar pela média de gols
+            raw_atk = atk / MEDIA_GOLS_LIGA
+            raw_def = df / MEDIA_GOLS_LIGA
+            
+            # Regressão à Média (35% puxando pro padrão 1.0)
+            # Evita que times com sequências perfeitas (ex: Argentina) fiquem com 30% de chance de título
+            forca_ataque_global[time] = (raw_atk * 0.65) + (1.0 * 0.35)
+            forca_defesa_global[time] = (raw_def * 0.65) + (1.0 * 0.35)
 
 if not jogos.empty:
     calcular_forcas()
