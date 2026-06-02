@@ -5,6 +5,7 @@ import time
 BASE_URL = "https://api.sofascore.com/api/v1"
 
 OUTPUT_FILE = "classificacao.csv"
+KNOCKOUT_FILE = "mata_mata.csv"
 
 LEAGUES = [
     {
@@ -22,12 +23,74 @@ LEAGUES = [
     {
         "liga": "Copa América",
         "tournament_id": 133
+    },
+    {
+        "liga": "OFC Men's Nations Cup",
+        "tournament_id": 22716
+    },
+    {
+        "liga": "World Cup Qual. OFC",
+        "tournament_id": 309
+    },
+    {
+        "liga": "EURO",
+        "tournament_id": 1
+    },
+    {
+        "liga": "World Cup Qual. UEFA",
+        "tournament_id": 11
+    },
+    {
+        "liga": "CONCACAF Gold Cup",
+        "tournament_id": 140
+    },
+    {
+        "liga": "World Cup Qual. CONCACAF",
+        "tournament_id": 14
+    },
+    {
+        "liga": "World Cup Qual. AFC",
+        "tournament_id": 308
+    },
+    {
+        "liga": "AFC Asian Cup",
+        "tournament_id": 246
+    },
+    {
+        "liga": "UEFA Nations League",
+        "tournament_id": 10783
+    },
+    {
+        "liga": "CONCACAF Nations League",
+        "tournament_id": 14100
     }
 ]
 
-# =========================================
-# FETCH JSON
-# =========================================
+
+def get_events(
+    page,
+    tournament_id,
+    season_id
+):
+
+    endpoints = [
+
+        f"{BASE_URL}/unique-tournament/{tournament_id}/season/{season_id}/events",
+
+        f"{BASE_URL}/unique-tournament/{tournament_id}/season/{season_id}/events/last/0"
+
+    ]
+
+    for url in endpoints:
+
+        data = fetch_json(page, url)
+
+        if data and data.get("events"):
+
+            return data["events"]
+
+    return []
+
 
 def fetch_json(page, url):
 
@@ -142,6 +205,7 @@ def get_standings(
 def main():
 
     rows = []
+    knockout_rows = []
 
     with sync_playwright() as p:
 
@@ -183,6 +247,12 @@ def main():
                 continue
 
             standings = get_standings(
+                page,
+                tournament_id,
+                season_id
+            )
+
+            events = get_events(
                 page,
                 tournament_id,
                 season_id
@@ -245,6 +315,103 @@ def main():
                         f"[ERRO] {e}"
                     )
 
+            for event in events:
+                try:
+
+                    round_info = (
+                        event.get("roundInfo")
+                        or
+                        event.get("tournamentRound")
+                        or
+                        {}
+                    )
+
+                    phase = (
+                        round_info.get("name")
+                        or
+                        round_info.get("round")
+                        or
+                        "Desconhecida"
+                    )
+
+                    phase_lower = str(phase).lower()
+
+                    knockout_keywords = [
+
+                        "quarter",
+                        "semi",
+                        "final",
+                        "playoff",
+                        "round of 16",
+                        "eighth",
+                        "knockout",
+                        "elimination"
+
+                    ]
+
+                    if not any(
+                        keyword in phase_lower
+                        for keyword in knockout_keywords
+                    ):
+                        continue
+
+                    home = (
+                        event.get("homeTeam", {})
+                        .get("name")
+                    )
+
+                    away = (
+                        event.get("awayTeam", {})
+                        .get("name")
+                    )
+
+                    home_score = (
+                        event.get("homeScore", {})
+                        .get("current")
+                    )
+
+                    away_score = (
+                        event.get("awayScore", {})
+                        .get("current")
+                    )
+
+                    winner = ""
+
+                    winner_code = event.get("winnerCode")
+
+                    if winner_code == 1:
+                        winner = home
+
+                    elif winner_code == 2:
+                        winner = away
+
+                    knockout_rows.append({
+
+                        "liga": league_name,
+
+                        "fase": phase,
+
+                        "mandante": home,
+
+                        "visitante": away,
+
+                        "gols_mandante": home_score,
+
+                        "gols_visitante": away_score,
+
+                        "placar":
+                            f"{home_score}-{away_score}",
+
+                        "classificado": winner
+
+                    })
+
+                except Exception as e:
+
+                    print(
+                        f"[ERRO MATA-MATA] {e}"
+                    )
+
             time.sleep(1)
 
         browser.close()
@@ -272,6 +439,26 @@ def main():
         index=False,
         encoding="utf-8-sig"
     )
+
+    if len(knockout_rows):
+
+        knockout_df = pd.DataFrame(
+            knockout_rows
+        )
+
+        knockout_df.to_csv(
+
+            KNOCKOUT_FILE,
+
+            index=False,
+
+            encoding="utf-8-sig"
+
+        )
+
+        print(
+            f"Arquivo: {KNOCKOUT_FILE}"
+        )
 
     print("\n======================")
     print("CSV salvo com sucesso")

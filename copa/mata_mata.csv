@@ -1,0 +1,85 @@
+﻿liga,fase,mandante,visitante,gols_mandante,gols_visitante,placar,classificado
+Africa Cup of Nations,Round of 16,Senegal,Sudan,3,1,3-1,Senegal
+Africa Cup of Nations,Round of 16,Mali,Tunisia,4,3,4-3,Mali
+Africa Cup of Nations,Round of 16,Morocco,Tanzania,1,0,1-0,Morocco
+Africa Cup of Nations,Round of 16,South Africa,Cameroon,1,2,1-2,Cameroon
+Africa Cup of Nations,Round of 16,Egypt,Benin,3,1,3-1,Egypt
+Africa Cup of Nations,Round of 16,Nigeria,Mozambique,4,0,4-0,Nigeria
+Africa Cup of Nations,Round of 16,Algeria,DR Congo,1,0,1-0,Algeria
+Africa Cup of Nations,Round of 16,Côte d'Ivoire,Burkina Faso,3,0,3-0,Côte d'Ivoire
+Africa Cup of Nations,Quarterfinals,Mali,Senegal,0,1,0-1,Senegal
+Africa Cup of Nations,Quarterfinals,Cameroon,Morocco,0,2,0-2,Morocco
+Africa Cup of Nations,Quarterfinals,Algeria,Nigeria,0,2,0-2,Nigeria
+Africa Cup of Nations,Quarterfinals,Egypt,Côte d'Ivoire,3,2,3-2,Egypt
+Africa Cup of Nations,Semifinals,Senegal,Egypt,1,0,1-0,Senegal
+Africa Cup of Nations,Semifinals,Nigeria,Morocco,2,4,2-4,Morocco
+Africa Cup of Nations,Final,Senegal,Morocco,0,3,0-3,Morocco
+World Cup Qual. CAF,Final,United Arab Emirates,Iraq,1,1,1-1,
+World Cup Qual. CAF,Final,Iraq,United Arab Emirates,2,1,2-1,Iraq
+Copa América,Quarterfinals,Argentina,Ecuador,5,3,5-3,Argentina
+Copa América,Quarterfinals,Venezuela,Canada,4,5,4-5,
+Copa América,Quarterfinals,Colombia,Panama,5,0,5-0,Colombia
+Copa América,Quarterfinals,Uruguay,Brazil,4,2,4-2,Uruguay
+Copa América,Semifinals,Argentina,Canada,2,0,2-0,Argentina
+Copa América,Semifinals,Uruguay,Colombia,0,1,0-1,Colombia
+Copa América,Final,Argentina,Colombia,1,0,1-0,Argentina
+OFC Men's Nations Cup,Semifinals,New Zealand,Tahiti,5,0,5-0,New Zealand
+OFC Men's Nations Cup,Semifinals,Fiji,Vanuatu,1,2,1-2,Vanuatu
+OFC Men's Nations Cup,Final,New Zealand,Vanuatu,3,0,3-0,New Zealand
+World Cup Qual. OFC,Semifinals,Cook Islands,Tonga,1,3,1-3,Tonga
+World Cup Qual. OFC,Semifinals,American Samoa,Samoa,0,2,0-2,Samoa
+World Cup Qual. OFC,Final,Tonga,Samoa,1,2,1-2,Samoa
+World Cup Qual. OFC,Semifinals,New Caledonia,Tahiti,3,0,3-0,New Caledonia
+World Cup Qual. OFC,Semifinals,New Zealand,Fiji,7,0,7-0,New Zealand
+World Cup Qual. OFC,Final,New Caledonia,New Zealand,0,3,0-3,New Zealand
+EURO,Round of 16,Switzerland,Italy,2,0,2-0,Switzerland
+EURO,Round of 16,Germany,Denmark,2,0,2-0,Germany
+EURO,Round of 16,England,Slovakia,2,1,2-1,England
+EURO,Round of 16,Spain,Georgia,4,1,4-1,Spain
+EURO,Round of 16,France,Belgium,1,0,1-0,France
+EURO,Round of 16,Portugal,Slovenia,3,0,3-0,Portugal
+EURO,Round of 16,Romania,Netherlands,0,3,0-3,Netherlands
+EURO,Round of 16,Austria,Türkiye,1,2,1-2,Türkiye
+EURO,Quarterfinals,Spain,Germany,2,1,2-1,Spain
+EURO,Quarterfinals,Portugal,France,3,5,3-5,France
+EURO,Quarterfinals,England,Switzerland,6,4,6-4,England
+EURO,Quarterfinals,Netherlands,Türkiye,2,1,2-1,Netherlands
+EURO,Semifinals,Spain,France,2,1,2-1,Spain
+EURO,Semifinals,Netherlands,England,1,2,1-2,England
+EURO,Final,Spain,England,2,1,2-1,Spain
+World Cup Qual. UEFA,Semifinals,Türkiye,Romania,1,0,1-0,Türkiye
+World Cup Qual. UEFA,Semifinals,Slovakia,Kosovo,3,4,3-4,Kosovo
+World Cup Qual. UEFA,Semifinals,Czechia,Ireland,6,5,6-5,Czechia
+World Cup Qual. UEFA,Semifinals,Wales,Bosnia & Herzegovina,3,5,3-5,Bosnia & Herzegovina
+World Cup Qual. UEFA,Semifinals,Ukraine,Sweden,1,3,1-3,Sweden
+World Cup Qual. UEFA,Semifinals,Denmark,North Macedonia,4,0,4-0,Denmark
+World Cup Qual. UEFA,Semifinals,Poland,Albania,2,1,2-1,Poland
+World Cup Qual. UEFA,Semifinals,Italy,Northern Ireland,2,0,2-0,Italy
+World Cup Qual. UEFA,Final,Czechia,Denmark,5,3,5-3,Czechia
+World Cup Qual. UEFA,Final,Sweden,Poland,3,2,3-2,Sweden
+World Cup Qual. UEFA,Final,Kosovo,Türkiye,0,1,0-1,Türkiye
+World Cup Qual. UEFA,Final,Bosnia & Herzegovina,Italy,5,2,5-2,Bosnia & Herzegovina
+CONCACAF Gold Cup,Quarterfinals,Panama,Honduras,5,6,5-6,Honduras
+CONCACAF Gold Cup,Quarterfinals,Mexico,Saudi Arabia,2,0,2-0,Mexico
+CONCACAF Gold Cup,Quarterfinals,Canada,Guatemala,6,7,6-7,Guatemala
+CONCACAF Gold Cup,Quarterfinals,USA,Costa Rica,6,5,6-5,USA
+CONCACAF Gold Cup,Semifinals,USA,Guatemala,2,1,2-1,USA
+CONCACAF Gold Cup,Semifinals,Mexico,Honduras,1,0,1-0,Mexico
+CONCACAF Gold Cup,Final,USA,Mexico,1,2,1-2,Mexico
+World Cup Qual. AFC,Final,United Arab Emirates,Iraq,1,1,1-1,
+World Cup Qual. AFC,Final,Iraq,United Arab Emirates,2,1,2-1,Iraq
+CONCACAF Nations League,Final,Cayman Islands,Guadeloupe,0,5,0-5,Guadeloupe
+CONCACAF Nations League,Final,Barbados,Guyana,1,4,1-4,Guyana
+CONCACAF Nations League,Quarterfinals,Suriname,Canada,0,1,0-1,Canada
+CONCACAF Nations League,Quarterfinals,Honduras,Mexico,2,0,2-0,Honduras
+CONCACAF Nations League,Final,Cuba,Saint Kitts and Nevis,4,0,4-0,Cuba
+CONCACAF Nations League,Quarterfinals,USA,Jamaica,4,2,4-2,USA
+CONCACAF Nations League,Quarterfinals,Panama,Costa Rica,2,2,2-2,
+CONCACAF Nations League,Final,Guadeloupe,Cayman Islands,1,0,1-0,Guadeloupe
+CONCACAF Nations League,Final,French Guiana,Belize,2,2,2-2,
+CONCACAF Nations League,Final,Guyana,Barbados,5,3,5-3,Guyana
+CONCACAF Nations League,Quarterfinals,Canada,Suriname,3,0,3-0,Canada
+CONCACAF Nations League,Quarterfinals,Mexico,Honduras,4,0,4-0,Mexico
+CONCACAF Nations League,Semifinals,USA,Panama,0,1,0-1,Panama
+CONCACAF Nations League,Semifinals,Canada,Mexico,0,2,0-2,Mexico
+CONCACAF Nations League,Final,Mexico,Panama,2,1,2-1,Mexico

@@ -109,9 +109,9 @@ def simulate():
             # Update the configuration in prev before reload
             sys.modules['prev'].SIMULACOES = simulations_count
             importlib.reload(sys.modules['prev'])
-            prev = sys.modules['prev']
+            copa.prev = sys.modules['prev']
         else:
-            import prev
+            import copa.prev as prev
             prev.SIMULACOES = simulations_count
             # Force reload to apply mock input the first time too
             importlib.reload(prev)
