@@ -2,96 +2,125 @@ import pandas as pd
 import numpy as np
 from collections import defaultdict, Counter
 import mlflow
-import random
+import os
+import sys
+from functools import cmp_to_key
 
-# Importar as estruturas base do motor da fase de grupos
-from prev_fase_grupos_copa import (
-    selecoes_copa, confrontos_por_grupo, 
-    simular_jogo, sortear_jogador_evento, 
-    PESOS_SELECOES, SIMULACOES
-)
+# Adicionar raiz ao path para importar motor_simulacao
+sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+import motor_simulacao
+
+# =========================================================
+# CONFIGURAÇÕES E CONSTANTES
+# =========================================================
+ARQUIVO_CLASSIFICACAO = "copa/classificacao.csv"
+SIMULACOES = 10000
+
+print("Carregando bases de dados do Global...")
+try:
+    tabela_completa = pd.read_csv(ARQUIVO_CLASSIFICACAO)
+except FileNotFoundError:
+    print(f"Erro: Não foi possível encontrar {ARQUIVO_CLASSIFICACAO}.")
+    sys.exit(1)
+
+grupos_copa = tabela_completa[tabela_completa["liga"] == "Copa do Mundo FIFA 2026"].copy()
+selecoes_copa = grupos_copa["time"].unique()
+
+confrontos_por_grupo = defaultdict(list)
+for grupo_nome in grupos_copa["grupo"].unique():
+    times_do_grupo = grupos_copa[grupos_copa["grupo"] == grupo_nome]["time"].tolist()
+    for i in range(len(times_do_grupo)):
+        for j in range(i+1, len(times_do_grupo)):
+            confrontos_por_grupo[grupo_nome].append((times_do_grupo[i], times_do_grupo[j]))
 
 # =========================================================
 # LÓGICA DE SIMULAÇÃO DE MATA-MATA
 # =========================================================
 
-def resolver_empate_mata_mata(t1, t2):
-    # Lógica simples de pênaltis: leve favoritismo para times de maior Tier
-    p1 = PESOS_SELECOES.get(t1, 1.0)
-    p2 = PESOS_SELECOES.get(t2, 1.0)
-    prob_t1 = p1 / (p1 + p2)
-    
-    # Suaviza a probabilidade porque pênalti tem muita sorte (ex: 70% vira 60%)
-    prob_t1 = 0.5 + (prob_t1 - 0.5) * 0.5 
-    
-    if np.random.random() < prob_t1:
-        return t1, t2 # vencedor, perdedor
-    return t2, t1
-
+def tie_breaker(tA, tB, tabela_sim, h2h):
+    if tabela_sim[tA]["pts"] != tabela_sim[tB]["pts"]: return 1 if tabela_sim[tA]["pts"] > tabela_sim[tB]["pts"] else -1
+    if tabela_sim[tA]["sg"] != tabela_sim[tB]["sg"]: return 1 if tabela_sim[tA]["sg"] > tabela_sim[tB]["sg"] else -1
+    if tabela_sim[tA]["gp"] != tabela_sim[tB]["gp"]: return 1 if tabela_sim[tA]["gp"] > tabela_sim[tB]["gp"] else -1
+    if h2h[tA][tB]["pts"] != h2h[tB][tA]["pts"]: return 1 if h2h[tA][tB]["pts"] > h2h[tB][tA]["pts"] else -1
+    if h2h[tA][tB]["sg"] != h2h[tB][tA]["sg"]: return 1 if h2h[tA][tB]["sg"] > h2h[tB][tA]["sg"] else -1
+    if h2h[tA][tB]["gp"] != h2h[tB][tA]["gp"]: return 1 if h2h[tA][tB]["gp"] > h2h[tB][tA]["gp"] else -1
+    return 1 if np.random.random() > 0.5 else -1
 
 def sortear_chaveamento_16avos(primeiros, segundos, terceiros):
-    # Primeiros (12), Segundos (12), Terceiros (8)
-    # Pote 1: 8 melhores primeiros
-    pote1 = primeiros[:8]
-    # Pote 2: 4 piores primeiros + 4 melhores segundos
-    pote2 = primeiros[8:] + segundos[:4]
-    # Pote 3: 8 piores segundos
-    pote3 = segundos[4:]
-    # Pote 4: 8 terceiros
-    pote4 = terceiros
+    # Abordagem estruturada de seeding para simular cruzamentos oficiais
+    # primeiros: 12 times (ordenados do melhor pro pior)
+    # segundos: 12 times (ordenados)
+    # terceiros: 8 times (ordenados)
     
-    # Embaralhar para o sorteio
-    random.shuffle(pote1)
-    random.shuffle(pote2)
-    random.shuffle(pote3)
-    random.shuffle(pote4)
+    confrontos = []
     
-    confrontos_16avos = []
-    # Pote 1 x Pote 4
+    # 8 melhores 1ºs cruzam com os 8 terceiros (cruzamento invertido 1º melhor x 8º melhor 3º)
     for i in range(8):
-        confrontos_16avos.append((pote1[i], pote4[i]))
-    # Pote 2 x Pote 3
-    for i in range(8):
-        confrontos_16avos.append((pote2[i], pote3[i]))
+        confrontos.append((primeiros[i], terceiros[7-i]))
         
-    return confrontos_16avos
+    # Os 4 piores 1ºs (pos 8 a 11) cruzam com os 4 piores 2ºs (pos 8 a 11)
+    for i in range(4):
+        confrontos.append((primeiros[8+i], segundos[11-i]))
+        
+    # Os 8 melhores 2ºs cruzam entre si (1º melhor 2º x 8º melhor 2º)
+    for i in range(4):
+        confrontos.append((segundos[i], segundos[7-i]))
+        
+    return confrontos
 
-def simular_rodada_mata_mata(confrontos, artilheiros, assistentes, fase_nome):
+def simular_rodada_mata_mata(confrontos, artilheiros, assistentes):
     vencedores = []
     for t1, t2 in confrontos:
-        g1, g2 = simular_jogo(t1, t2)
+        g1, g2 = motor_simulacao.simular_jogo(t1, t2)
         
-        # Atribuir artilheiros
         for _ in range(g1):
-            art = sortear_jogador_evento(t1, "gol")
-            ass = sortear_jogador_evento(t1, "assistencia")
+            art = motor_simulacao.sortear_jogador_evento(t1, "gol")
+            ass = motor_simulacao.sortear_jogador_evento(t1, "assistencia")
             artilheiros[f"{art} ({t1})"] += 1
-            if art != ass:
-                assistentes[f"{ass} ({t1})"] += 1
+            if art != ass: assistentes[f"{ass} ({t1})"] += 1
                 
         for _ in range(g2):
-            art = sortear_jogador_evento(t2, "gol")
-            ass = sortear_jogador_evento(t2, "assistencia")
+            art = motor_simulacao.sortear_jogador_evento(t2, "gol")
+            ass = motor_simulacao.sortear_jogador_evento(t2, "assistencia")
             artilheiros[f"{art} ({t2})"] += 1
-            if art != ass:
-                assistentes[f"{ass} ({t2})"] += 1
+            if art != ass: assistentes[f"{ass} ({t2})"] += 1
                 
         if g1 > g2:
             vencedores.append(t1)
         elif g2 > g1:
             vencedores.append(t2)
         else:
-            venc, _ = resolver_empate_mata_mata(t1, t2)
-            vencedores.append(venc)
+            # Empate -> Prorrogação
+            gp1, gp2 = motor_simulacao.simular_prorrogacao(t1, t2)
             
-    # Criar próximos confrontos (Vencedor 1 x Vencedor 2, Vencedor 3 x Vencedor 4...)
+            # (Prorrogação também soma nas estatísticas de gols reais do jogador!)
+            for _ in range(gp1):
+                art = motor_simulacao.sortear_jogador_evento(t1, "gol")
+                ass = motor_simulacao.sortear_jogador_evento(t1, "assistencia")
+                artilheiros[f"{art} ({t1})"] += 1
+                if art != ass: assistentes[f"{ass} ({t1})"] += 1
+            for _ in range(gp2):
+                art = motor_simulacao.sortear_jogador_evento(t2, "gol")
+                ass = motor_simulacao.sortear_jogador_evento(t2, "assistencia")
+                artilheiros[f"{art} ({t2})"] += 1
+                if art != ass: assistentes[f"{ass} ({t2})"] += 1
+            
+            if gp1 > gp2:
+                vencedores.append(t1)
+            elif gp2 > gp1:
+                vencedores.append(t2)
+            else:
+                # Pênaltis
+                venc_penaltis = motor_simulacao.simular_penaltis(t1, t2)
+                vencedores.append(venc_penaltis)
+            
     proximos_confrontos = []
+    # Cria os cruzamentos para a próxima fase (adjacentes)
     for i in range(0, len(vencedores), 2):
         if i+1 < len(vencedores):
             proximos_confrontos.append((vencedores[i], vencedores[i+1]))
             
     return vencedores, proximos_confrontos
-
 
 # =========================================================
 # MOTOR PRINCIPAL
@@ -103,7 +132,6 @@ if __name__ == "__main__":
     mlflow.set_tracking_uri("sqlite:///mlruns.db")
     mlflow.set_experiment("Previsao_Copa_Mundo_2026_Global")
     
-    # Rastreamento de conquistas de fase
     resultados = {
         time: {
             "oitavas": 0,
@@ -122,78 +150,88 @@ if __name__ == "__main__":
         
         for sim in range(SIMULACOES):
             tabela_sim = {time: {"pts": 0, "sg": 0, "gp": 0} for time in selecoes_copa}
+            h2h = defaultdict(lambda: defaultdict(lambda: {"pts": 0, "sg": 0, "gp": 0}))
             
             # 1. FASE DE GRUPOS
             for grupo, confrontos in confrontos_por_grupo.items():
                 for t1, t2 in confrontos:
-                    gols1, gols2 = simular_jogo(t1, t2)
+                    gols1, gols2 = motor_simulacao.simular_jogo(t1, t2)
                     
                     tabela_sim[t1]["gp"] += gols1
                     tabela_sim[t2]["gp"] += gols2
                     tabela_sim[t1]["sg"] += (gols1 - gols2)
                     tabela_sim[t2]["sg"] += (gols2 - gols1)
                     
+                    h2h[t1][t2]["gp"] += gols1
+                    h2h[t2][t1]["gp"] += gols2
+                    h2h[t1][t2]["sg"] += (gols1 - gols2)
+                    h2h[t2][t1]["sg"] += (gols2 - gols1)
+                    
                     if gols1 > gols2:
                         tabela_sim[t1]["pts"] += 3
+                        h2h[t1][t2]["pts"] += 3
                     elif gols2 > gols1:
                         tabela_sim[t2]["pts"] += 3
+                        h2h[t2][t1]["pts"] += 3
                     else:
                         tabela_sim[t1]["pts"] += 1
                         tabela_sim[t2]["pts"] += 1
+                        h2h[t1][t2]["pts"] += 1
+                        h2h[t2][t1]["pts"] += 1
                         
                     for _ in range(gols1):
-                        art = sortear_jogador_evento(t1, "gol")
-                        ass = sortear_jogador_evento(t1, "assistencia")
+                        art = motor_simulacao.sortear_jogador_evento(t1, "gol")
+                        ass = motor_simulacao.sortear_jogador_evento(t1, "assistencia")
                         artilheiros[f"{art} ({t1})"] += 1
-                        if art != ass:
-                            assistentes[f"{ass} ({t1})"] += 1
+                        if art != ass: assistentes[f"{ass} ({t1})"] += 1
                             
                     for _ in range(gols2):
-                        art = sortear_jogador_evento(t2, "gol")
-                        ass = sortear_jogador_evento(t2, "assistencia")
+                        art = motor_simulacao.sortear_jogador_evento(t2, "gol")
+                        ass = motor_simulacao.sortear_jogador_evento(t2, "assistencia")
                         artilheiros[f"{art} ({t2})"] += 1
-                        if art != ass:
-                            assistentes[f"{ass} ({t2})"] += 1
+                        if art != ass: assistentes[f"{ass} ({t2})"] += 1
                             
-            # Classificar os grupos
+            def tb_global(tA, tB):
+                return tie_breaker(tA, tB, tabela_sim, h2h)
+                
             primeiros = []
             segundos = []
             terceiros = []
             
             for grupo, confrontos in confrontos_por_grupo.items():
                 times_do_grupo = list(set([c[0] for c in confrontos] + [c[1] for c in confrontos]))
-                classificacao = sorted(times_do_grupo, key=lambda x: (tabela_sim[x]["pts"], tabela_sim[x]["sg"], tabela_sim[x]["gp"]), reverse=True)
+                classificacao = sorted(times_do_grupo, key=cmp_to_key(tb_global), reverse=True)
                 primeiros.append(classificacao[0])
                 segundos.append(classificacao[1])
                 terceiros.append(classificacao[2])
                 
-            # Ordenar primeiros, segundos e terceiros para formar potes
-            primeiros = sorted(primeiros, key=lambda x: (tabela_sim[x]["pts"], tabela_sim[x]["sg"], tabela_sim[x]["gp"]), reverse=True)
-            segundos = sorted(segundos, key=lambda x: (tabela_sim[x]["pts"], tabela_sim[x]["sg"], tabela_sim[x]["gp"]), reverse=True)
-            terceiros = sorted(terceiros, key=lambda x: (tabela_sim[x]["pts"], tabela_sim[x]["sg"], tabela_sim[x]["gp"]), reverse=True)[:8]
+            # Ordenar para formar potes (ranking global da 1a fase)
+            primeiros = sorted(primeiros, key=cmp_to_key(tb_global), reverse=True)
+            segundos = sorted(segundos, key=cmp_to_key(tb_global), reverse=True)
+            terceiros = sorted(terceiros, key=cmp_to_key(tb_global), reverse=True)[:8]
             
             # 2. CHAVEAMENTO 16-AVOS
             confrontos_mata_mata = sortear_chaveamento_16avos(primeiros, segundos, terceiros)
             
             # 3. MATA MATA
             # 16-avos -> Oitavas
-            venc_16avos, confrontos_oitavas = simular_rodada_mata_mata(confrontos_mata_mata, artilheiros, assistentes, "16-avos")
+            venc_16avos, confrontos_oitavas = simular_rodada_mata_mata(confrontos_mata_mata, artilheiros, assistentes)
             for v in venc_16avos: resultados[v]["oitavas"] += 1
                 
             # Oitavas -> Quartas
-            venc_oitavas, confrontos_quartas = simular_rodada_mata_mata(confrontos_oitavas, artilheiros, assistentes, "Oitavas")
+            venc_oitavas, confrontos_quartas = simular_rodada_mata_mata(confrontos_oitavas, artilheiros, assistentes)
             for v in venc_oitavas: resultados[v]["quartas"] += 1
                 
             # Quartas -> Semi
-            venc_quartas, confrontos_semi = simular_rodada_mata_mata(confrontos_quartas, artilheiros, assistentes, "Quartas")
+            venc_quartas, confrontos_semi = simular_rodada_mata_mata(confrontos_quartas, artilheiros, assistentes)
             for v in venc_quartas: resultados[v]["semi"] += 1
                 
             # Semi -> Final
-            venc_semi, confrontos_final = simular_rodada_mata_mata(confrontos_semi, artilheiros, assistentes, "Semi")
+            venc_semi, confrontos_final = simular_rodada_mata_mata(confrontos_semi, artilheiros, assistentes)
             for v in venc_semi: resultados[v]["final"] += 1
                 
             # Final -> Campeão
-            campeao, _ = simular_rodada_mata_mata(confrontos_final, artilheiros, assistentes, "Final")
+            campeao, _ = simular_rodada_mata_mata(confrontos_final, artilheiros, assistentes)
             resultados[campeao[0]]["campeao"] += 1
 
         print("Consolidando Estatísticas Finais...")
