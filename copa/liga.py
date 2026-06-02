@@ -63,6 +63,10 @@ LEAGUES = [
     {
         "liga": "CONCACAF Nations League",
         "tournament_id": 14100
+    },
+    {
+        "liga": "Copa do Mundo FIFA 2026",
+        "tournament_id": 16
     }
 ]
 
