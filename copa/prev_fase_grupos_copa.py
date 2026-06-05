@@ -14,7 +14,7 @@ import motor_simulacao
 # CONFIGURAÇÕES E CONSTANTES
 # =========================================================
 ARQUIVO_CLASSIFICACAO = "copa/classificacao.csv"
-SIMULACOES = 10000
+SIMULACOES = 50000
 
 # =========================================================
 # CARGA DE DADOS
@@ -79,6 +79,7 @@ if __name__ == "__main__":
         total_jogos_simulados = 0
         
         for sim in range(SIMULACOES):
+            motor_simulacao.reset_estado_markov()
             tabela_sim = {time: {"pts": 0, "sg": 0, "gp": 0} for time in selecoes_copa}
             h2h = defaultdict(lambda: defaultdict(lambda: {"pts": 0, "sg": 0, "gp": 0}))
             
@@ -116,17 +117,21 @@ if __name__ == "__main__":
                         
                     for _ in range(gols1):
                         art = motor_simulacao.sortear_jogador_evento(t1, "gol")
-                        ass = motor_simulacao.sortear_jogador_evento(t1, "assistencia")
                         artilheiros[f"{art} ({t1})"] += 1
-                        if art != ass:
-                            assistentes[f"{ass} ({t1})"] += 1
+                        # Apenas 75% dos gols têm assistência
+                        if np.random.random() < 0.75:
+                            ass = motor_simulacao.sortear_jogador_evento(t1, "assistencia")
+                            if art != ass:
+                                assistentes[f"{ass} ({t1})"] += 1
                             
                     for _ in range(gols2):
                         art = motor_simulacao.sortear_jogador_evento(t2, "gol")
-                        ass = motor_simulacao.sortear_jogador_evento(t2, "assistencia")
                         artilheiros[f"{art} ({t2})"] += 1
-                        if art != ass:
-                            assistentes[f"{ass} ({t2})"] += 1
+                        # Apenas 75% dos gols têm assistência
+                        if np.random.random() < 0.75:
+                            ass = motor_simulacao.sortear_jogador_evento(t2, "assistencia")
+                            if art != ass:
+                                assistentes[f"{ass} ({t2})"] += 1
             
             terceiros_colocados = []
             

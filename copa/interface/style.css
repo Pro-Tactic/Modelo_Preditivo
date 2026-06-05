@@ -1,0 +1,567 @@
+/* ==========================================================================
+   DESIGN SYSTEM & VARIABLES  (identical to Champions baseline)
+   ========================================================================== */
+:root {
+    --color-black: #000000;
+    --color-bg-deep: #050508;
+    --color-bg-card: rgba(13, 14, 18, 0.55);
+    --color-bg-card-hover: rgba(20, 22, 28, 0.75);
+    --color-border: rgba(255, 255, 255, 0.05);
+    --color-border-glow: rgba(255, 255, 255, 0.1);
+
+    --color-white: #FEFEFE;
+    --color-gray: #A5B1D2;
+    --color-blue: #2559ED;
+    --color-blue-glow: rgba(37, 89, 237, 0.2);
+    --color-green: #A2FF01;
+    --color-green-glow: rgba(162, 255, 1, 0.25);
+    --color-gold: #F59E0B;
+    --color-gold-glow: rgba(245, 158, 11, 0.25);
+
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   GLOBAL RESET
+   ========================================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Starry background */
+.stars-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image:
+        radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+        radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+        radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+    background-size: 550px 550px, 350px 350px, 250px 250px;
+    background-position: 0 0, 40px 60px, 130px 270px;
+    opacity: 0.08; z-index: -1; pointer-events: none;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-black); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.3); }
+
+h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: -0.02em; font-weight: 700; }
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.app-header {
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky; top: 0; z-index: 100;
+    padding: 16px 24px;
+}
+.header-content {
+    max-width: 1400px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.brand { display: flex; align-items: center; gap: 16px; }
+#app-logo { height: 48px; width: auto; object-fit: contain; border-radius: 8px; box-shadow: 0 0 15px rgba(255,255,255,0.1); }
+.brand-text { display: flex; flex-direction: column; }
+.brand-sub { font-size: 0.65rem; color: var(--color-gray); letter-spacing: 0.2em; font-weight: 700; }
+.brand-title {
+    font-size: 1.6rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--color-white) 30%, var(--color-gray) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    white-space: nowrap;
+}
+.simulation-status {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(162,255,1,0.05);
+    border: 1px solid rgba(162,255,1,0.15);
+    padding: 6px 12px; border-radius: 20px;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.status-dot.green { background-color: var(--color-green); box-shadow: 0 0 8px var(--color-green); }
+.status-text { font-size: 0.75rem; font-weight: 600; color: var(--color-green); }
+
+/* ==========================================================================
+   PAGE LAYOUT
+   ========================================================================== */
+.page-layout { max-width: 1400px; margin: 0 auto; padding: 40px 24px; display: flex; flex-direction: column; gap: 48px; }
+
+.section-block { display: flex; flex-direction: column; gap: 20px; }
+.section-title {
+    font-size: 1.25rem; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-white);
+    padding-bottom: 6px;
+}
+.section-title::after {
+    content: ''; display: block; width: 30px; height: 2px;
+    background-color: var(--color-green); margin-top: 4px;
+}
+.section-desc { font-size: 0.85rem; color: var(--color-gray); margin-top: -8px; }
+
+/* ==========================================================================
+   GLASS CARDS
+   ========================================================================== */
+.glass-card {
+    position: relative; z-index: 1;
+    background: var(--color-bg-card);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border);
+    border-radius: 16px; padding: 24px; margin-bottom: 0;
+    transition: border var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-normal);
+}
+.glass-card:hover {
+    border: 1px solid var(--color-border-glow);
+    background: var(--color-bg-card-hover);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+}
+.card-title {
+    font-size: 1.05rem; font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.02em;
+    border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;
+}
+.title-icon { font-size: 1.2rem; }
+
+/* ==========================================================================
+   FAVORITES PODIUM
+   ========================================================================== */
+.favorites-podium {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+.fav-card {
+    background: var(--color-bg-card);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border);
+    border-radius: 16px; padding: 24px;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    transition: all var(--transition-normal);
+    position: relative; overflow: hidden;
+}
+.fav-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(162,255,1,0.03) 100%);
+    pointer-events: none;
+}
+.fav-card:hover {
+    border-color: var(--color-border-glow);
+    box-shadow: 0 0 30px rgba(162,255,1,0.07);
+    transform: translateY(-3px);
+}
+.fav-card.rank-1 { border-color: rgba(245,158,11,0.3); }
+.fav-card.rank-1:hover { box-shadow: 0 0 30px var(--color-gold-glow); }
+.fav-rank {
+    font-family: var(--font-heading); font-size: 2.5rem; font-weight: 800;
+    color: var(--color-gray); margin-bottom: 4px;
+}
+.fav-card.rank-1 .fav-rank { color: var(--color-gold); text-shadow: 0 0 15px var(--color-gold-glow); }
+.fav-card.rank-2 .fav-rank { color: #d0d7e8; }
+.fav-card.rank-3 .fav-rank { color: #cd7f32; }
+.fav-team { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: var(--color-white); margin-bottom: 6px; }
+.fav-pct { font-size: 1.4rem; font-weight: 800; color: var(--color-green); font-family: var(--font-heading); }
+.fav-pct-label { font-size: 0.72rem; color: var(--color-gray); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+
+/* ==========================================================================
+   KNOCKOUT BRACKET
+   ========================================================================== */
+.bracket-wrapper {
+    background: var(--color-bg-card);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border);
+    border-radius: 16px; padding: 32px;
+    overflow-x: auto;
+}
+.bracket {
+    display: flex; align-items: center; gap: 0;
+    min-width: 900px;
+}
+.bracket-round {
+    display: flex; flex-direction: column;
+    justify-content: space-around; flex: 1;
+    gap: 0;
+}
+.bracket-round-title {
+    text-align: center; font-size: 0.65rem; font-weight: 700;
+    color: var(--color-gray); text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 12px;
+}
+.bracket-match {
+    display: flex; flex-direction: column;
+    margin: 4px 0; position: relative;
+}
+.bracket-team {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 6px; padding: 7px 10px;
+    margin: 2px 0; font-size: 0.8rem; font-weight: 600;
+    transition: all var(--transition-fast);
+    white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; max-width: 160px;
+}
+.bracket-team:hover { border-color: rgba(162,255,1,0.25); background: rgba(162,255,1,0.04); }
+.bracket-team.winner {
+    border-color: rgba(162,255,1,0.4);
+    background: rgba(162,255,1,0.06);
+    color: var(--color-green);
+}
+.bracket-team-flag { font-size: 1rem; flex-shrink: 0; }
+.bracket-separator { height: 1px; background: rgba(255,255,255,0.04); margin: 1px 0; }
+
+/* connector lines between rounds */
+.bracket-connector {
+    display: flex; flex-direction: column;
+    justify-content: space-around;
+    width: 24px; flex-shrink: 0;
+}
+.bracket-connector-line {
+    flex: 1; border-right: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Final champion card */
+.champion-card {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 20px; gap: 8px; flex-shrink: 0; width: 160px;
+    background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.03));
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 16px;
+}
+.champion-trophy { font-size: 2.5rem; }
+.champion-label { font-size: 0.65rem; color: var(--color-gold); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+.champion-name { font-family: var(--font-heading); font-size: 1rem; font-weight: 800; color: var(--color-gold); text-align: center; text-shadow: 0 0 15px var(--color-gold-glow); }
+
+/* ==========================================================================
+   GROUPS GRID
+   ========================================================================== */
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+.group-card {
+    background: var(--color-bg-card);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border);
+    border-radius: 16px; padding: 20px;
+    transition: all var(--transition-normal);
+}
+.group-card:hover {
+    border-color: var(--color-border-glow);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+.group-header-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;
+}
+.group-name { font-family: var(--font-heading); font-size: 1rem; font-weight: 800; color: var(--color-blue); }
+.group-col-labels {
+    display: grid;
+    grid-template-columns: 24px 1fr 72px 44px;
+    gap: 4px;
+    font-size: 0.65rem; font-weight: 700; color: var(--color-gray);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 6px; padding: 0 4px;
+}
+.group-row {
+    display: grid;
+    grid-template-columns: 24px 1fr 72px 44px;
+    gap: 4px; align-items: center;
+    padding: 7px 4px; border-radius: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background var(--transition-fast);
+    font-size: 0.82rem;
+}
+.group-row:hover { background: rgba(255,255,255,0.03); }
+.group-row:last-child { border-bottom: none; }
+.group-row.advances { background: rgba(162,255,1,0.04); }
+.group-pos { font-weight: 700; color: var(--color-gray); font-size: 0.75rem; }
+.group-pos.top2 { color: var(--color-green); }
+.group-team-name { font-weight: 600; color: var(--color-white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.group-pct {
+    text-align: right; font-weight: 700; font-size: 0.78rem;
+    color: var(--color-green);
+}
+.group-pts {
+    text-align: right; font-weight: 800; font-size: 0.85rem;
+    color: var(--color-gold);
+}
+.advance-badge {
+    font-size: 0.6rem; background: rgba(162,255,1,0.1);
+    border: 1px solid rgba(162,255,1,0.3); color: var(--color-green);
+    padding: 1px 5px; border-radius: 4px; margin-left: 4px;
+    font-weight: 700; vertical-align: middle;
+}
+
+/* ==========================================================================
+   STATISTICS GRID (ARTILHEIROS & ASSISTENTES)
+   ========================================================================== */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.probability-list { display: flex; flex-direction: column; gap: 10px; }
+.probability-item { display: flex; align-items: center; gap: 12px; }
+.item-rank { font-size: 0.8rem; font-weight: 700; color: var(--color-gray); width: 16px; flex-shrink: 0; }
+.item-info { flex-grow: 1; display: flex; flex-direction: column; }
+.item-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-bar-bg { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.item-bar-fill { height: 100%; border-radius: 2px; }
+.item-pct { font-family: var(--font-heading); font-weight: 700; font-size: 0.85rem; color: var(--color-white); width: 50px; text-align: right; flex-shrink: 0; }
+
+/* ==========================================================================
+   LOADING & UTILITIES
+   ========================================================================== */
+.loading-placeholder { color: var(--color-gray); font-style: italic; font-size: 0.85rem; padding: 16px 0; }
+.neon-green { color: var(--color-green) !important; }
+.neon-blue { color: var(--color-blue) !important; }
+.hidden { display: none !important; }
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.app-footer {
+    border-top: 1px solid var(--color-border);
+    padding: 24px; text-align: center;
+    background: rgba(0,0,0,0.9); margin-top: 0;
+}
+.footer-content { max-width: 1400px; margin: 0 auto; }
+.app-footer p { font-size: 0.75rem; color: var(--color-gray); margin: 4px 0; }
+.footer-note { font-size: 0.7rem !important; opacity: 0.5; }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .bracket-wrapper { padding: 20px 16px; }
+}
+@media (max-width: 768px) {
+    .page-layout { padding: 24px 16px; gap: 36px; }
+    .groups-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .favorites-podium { grid-template-columns: repeat(2, 1fr); }
+}
+}
+@media (max-width: 480px) {
+    .favorites-podium { grid-template-columns: 1fr; }
+    .brand-title { font-size: 1.2rem; }
+    #app-logo { height: 36px; }
+}
+
+/* ==========================================================================
+   SPLIT BRACKET & GOLDEN CARDS
+   ========================================================================== */
+
+.golden-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(255,215,0,0.02));
+    border: 1px solid rgba(255,215,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.golden-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, #FFD700, transparent);
+}
+
+.golden-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+.golden-title { color: #FFD700; font-size: 0.8rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+.golden-name { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+.golden-stat { color: var(--color-green); font-weight: 600; font-size: 1.1rem; }
+
+.bracket-wrapper {
+    width: 100%;
+    /* Removed overflow-x: auto to prevent scrollbar */
+    display: flex;
+    justify-content: center;
+}
+
+.split-bracket {
+    display: flex;
+    justify-content: center; /* Center everything */
+    align-items: stretch;
+    width: 100%;
+    max-width: 1300px; /* Constrain max width */
+    margin: 1rem 0;
+    gap: 0.2rem; /* Reduce gap significantly */
+    padding-bottom: 1rem;
+}
+
+.bracket-side {
+    display: flex;
+    flex: 1; /* Allow side to grow/shrink */
+    gap: 0.2rem; /* Tighter spacing between cols */
+    justify-content: center;
+}
+
+.left-side {
+    flex-direction: row;
+}
+
+.right-side {
+    flex-direction: row;
+}
+
+.bracket-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex: 1; /* Make columns flex to fill space equally */
+    min-width: 100px; /* Reduced from 150px to prevent overflow */
+}
+
+.match-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin: 0.2rem 0; /* Reduced vertical margin */
+}
+
+.connector {
+    width: 10px; /* Reduced from 20px */
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+}
+
+.bracket-match {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 0.25rem 0.3rem; /* Reduced padding */
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem; /* Reduced gap */
+    width: 100%; /* Take full width of container */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.bracket-team {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem; /* Reduced gap */
+    font-size: 0.75rem; /* Smaller font size */
+    color: var(--color-gray);
+    padding: 0;
+}
+
+.bracket-team.winner {
+    font-weight: 600;
+    color: var(--color-white);
+}
+
+.circle-flag {
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.bracket-team.winner .circle-flag {
+    box-shadow: 0 0 8px var(--color-green);
+    border-color: var(--color-green);
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 90px;
+}
+
+/* ==========================================================================
+   GROUPS GRID UPDATES
+   ========================================================================== */
+.group-col-labels {
+    display: grid;
+    grid-template-columns: 36px 1fr 80px;
+    gap: 8px;
+    font-size: 0.65rem; font-weight: 700; color: var(--color-gray);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 6px; padding: 0 4px;
+}
+.group-row {
+    display: grid;
+    grid-template-columns: 36px 1fr 80px;
+    gap: 8px; align-items: center;
+    padding: 7px 4px; border-radius: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background var(--transition-fast);
+    font-size: 0.82rem;
+}
+
+.group-pos.top3-adv {
+    color: var(--color-gold);
+}
+
+.bracket-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 250px;
+    text-align: center;
+    background: radial-gradient(circle, rgba(162,255,1,0.1) 0%, transparent 70%);
+    padding: 2rem;
+    border-radius: 50%;
+}
+
+.final-match-title {
+    color: var(--color-green);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.final-match {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: rgba(0,0,0,0.5);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.vs-badge {
+    color: #888;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.champion-trophy-large {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 20px rgba(255,215,0,0.5));
+}
+
+.champion-name-large {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #FFD700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}

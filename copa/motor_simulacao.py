@@ -6,6 +6,9 @@ import math
 import json
 import os
 
+from formacoes import MAPA_FORMACAO, PERFIL_FORMACAO, MEDIA_IDX_ATAQUE, MEDIA_IDX_DEFESA
+ALPHA_FORMACAO = 0.125
+
 # =========================================================
 # CONFIGURAÇÕES E CONSTANTES
 # =========================================================
@@ -30,7 +33,23 @@ BATEDORES_PENALTI = {
     "Colombia": ["James Rodríguez", "Luis Díaz"]
 }
 
-HOST_TEAMS = ["USA", "Canada", "Mexico"]
+PESO_COBRADOR_PENALTI = {}
+def _build_pesos_penalti():
+    pesos_por_posicao = [2.0, 1.4, 1.1, 1.0]
+    for time, batedores in BATEDORES_PENALTI.items():
+        PESO_COBRADOR_PENALTI[time] = {}
+        for i, bat in enumerate(batedores):
+            mult = pesos_por_posicao[i] if i < len(pesos_por_posicao) else 1.0
+            PESO_COBRADOR_PENALTI[time][bat] = mult
+
+_build_pesos_penalti()
+
+HOST_BONUS = {
+    "Mexico": 1.08,
+    "USA": 1.06,
+    "Canada": 1.04
+}
+HOST_PENALTY = {k: 2.0 - v for k, v in HOST_BONUS.items()}
 
 # =========================================================
 # CARGA DE DADOS
@@ -44,7 +63,7 @@ try:
 except FileNotFoundError as e:
     print(f"Aviso: Não encontrou o arquivo CSV. Verifique o caminho de execução. Erro: {e}")
     # Cria DF vazios para o linter/tipo funcionar caso seja rodado de um dir diferente
-    jogos = pd.DataFrame(columns=["data_jogo", "time_casa", "time_fora", "resultado", "formacao_casa", "formacao_fora", "gols", "assistencias"])
+    jogos = pd.DataFrame(columns=["data_jogo", "time_casa", "time_fora", "resultado", "formacao_casa", "formacao_fora", "gols", "assistencias", "competicao"])
     convocacao = pd.DataFrame(columns=["selecao", "jogador"])
 
 TRADUCAO_FIFA = {
@@ -97,6 +116,29 @@ def peso_recencia(data_jogo, fator=0.001):
     dias = (datetime.now() - data_jogo).days
     return math.exp(-fator * max(0, dias))
 
+PESO_COMPETICAO = {
+    "World Cup Qualification": 1.00,
+    "FIFA World Cup Qual":     1.00,
+    "World Cup Qual":          1.00,
+    "Copa América":            1.00,  
+    "CONMEBOL Copa":           1.00,
+    "Euro":                    1.00,
+    "Africa Cup of Nations":   1.00,
+    "AFC Asian Cup":           1.00,
+    "CONCACAF Gold Cup":       1.00,
+    "UEFA Nations League":     0.75,
+    "CONCACAF Nations League": 0.75,
+    "Int. Friendly Games":     0.35,
+    "default":                 0.60,
+}
+
+def obter_peso_competicao(nome_competicao):
+    if pd.isna(nome_competicao): return PESO_COMPETICAO["default"]
+    for chave, peso in PESO_COMPETICAO.items():
+        if chave in nome_competicao:
+            return peso
+    return PESO_COMPETICAO["default"]
+
 def parse_resultado(resultado):
     try:
         g1, g2 = resultado.split("x")
@@ -124,6 +166,8 @@ print("Calculando forças das seleções (Dixon-Coles simplificado)...")
 
 forca_ataque_global = defaultdict(lambda: 1.0)
 forca_defesa_global = defaultdict(lambda: 1.0)
+indice_solidez = defaultdict(lambda: 0.5)
+ALPHA_SOLIDEZ = 0.15
 
 total_gols = 0
 total_jogos = 0
@@ -140,14 +184,30 @@ def calcular_forcas():
     pesos_ataque = defaultdict(float)
     pesos_defesa = defaultdict(float)
     
+    gols_marcados_brutos = defaultdict(float)
+    gols_sofridos_brutos = defaultdict(float)
+    pesos_brutos = defaultdict(float)
+    
     for _, row in jogos.iterrows():
         g1, g2 = parse_resultado(row["resultado"])
-        peso = peso_recencia(row["data_jogo"])
+        peso_base = peso_recencia(row["data_jogo"])
+        peso_comp = obter_peso_competicao(row.get("competicao", ""))
+        peso = peso_base * peso_comp
+        
         t_casa = row["time_casa"]
         t_fora = row["time_fora"]
         
         pts_casa = obter_pontos_fifa(t_casa)
         pts_fora = obter_pontos_fifa(t_fora)
+        
+        # M1 (Fix #3): Solidez com gols brutos (sem o multiplicador de adversário)
+        gols_marcados_brutos[t_casa] += g1 * peso
+        gols_sofridos_brutos[t_casa] += g2 * peso
+        pesos_brutos[t_casa] += peso
+        
+        gols_marcados_brutos[t_fora] += g2 * peso
+        gols_sofridos_brutos[t_fora] += g1 * peso
+        pesos_brutos[t_fora] += peso
         
         # O gol marcado ganha um multiplicador exponencial baseado na força de quem sofreu
         # Potência 2.5 pune severamente vitórias fáceis em continentes mais fracos
@@ -170,6 +230,11 @@ def calcular_forcas():
         forcas_defesa[t_fora] += (def_ajustada_fora * peso)
         pesos_defesa[t_fora] += peso
 
+    for time in pesos_brutos:
+        m = gols_marcados_brutos[time] / pesos_brutos[time]
+        s = gols_sofridos_brutos[time] / pesos_brutos[time]
+        indice_solidez[time] = 1.0 - (s / (m + s + 1e-6))
+
     for time in set(list(forcas_ataque.keys()) + list(forcas_defesa.keys())):
         if pesos_ataque[time] > 0:
             atk = forcas_ataque[time] / pesos_ataque[time]
@@ -179,10 +244,13 @@ def calcular_forcas():
             raw_atk = atk / MEDIA_GOLS_LIGA
             raw_def = df / MEDIA_GOLS_LIGA
             
-            # Regressão à Média (35% puxando pro padrão 1.0)
-            # Evita que times com sequências perfeitas (ex: Argentina) fiquem com 30% de chance de título
-            forca_ataque_global[time] = (raw_atk * 0.65) + (1.0 * 0.35)
-            forca_defesa_global[time] = (raw_def * 0.65) + (1.0 * 0.35)
+            # Fix #2: Regressão à Média Bayesiana (Bayesian Shrinkage)
+            K = 3.0
+            n_jogos_ponderados = pesos_ataque[time]
+            beta = n_jogos_ponderados / (n_jogos_ponderados + K)
+            
+            forca_ataque_global[time] = (raw_atk * beta) + (1.0 * (1.0 - beta))
+            forca_defesa_global[time] = (raw_def * beta) + (1.0 * (1.0 - beta))
 
 if not jogos.empty:
     calcular_forcas()
@@ -234,27 +302,49 @@ def prever_formacao(time, estado_atual=None):
 def atualizar_estado_formacao(time, nova_formacao):
     ultima_formacao_time[time] = nova_formacao
 
+def reset_estado_markov():
+    global ultima_formacao_time
+    ultima_formacao_time = {}
+
 # =========================================================
 # DISTRIBUIÇÃO DE GOLS / ASSISTÊNCIAS E JOGADORES
 # =========================================================
 distribuicao_gols = defaultdict(lambda: defaultdict(float))
 distribuicao_assists = defaultdict(lambda: defaultdict(float))
 
+ALPHA_ADVERSARIO_JOGADOR = 1.25
+
 for _, row in jogos.iterrows():
-    peso = peso_recencia(row["data_jogo"])
+    peso_rec = peso_recencia(row["data_jogo"])
+    peso_comp = obter_peso_competicao(row.get("competicao", ""))
+    peso_rec *= peso_comp
+    
+    t_casa = row["time_casa"]
+    t_fora = row["time_fora"]
+    
+    pts_fora = obter_pontos_fifa(t_fora)
+    pts_casa = obter_pontos_fifa(t_casa)
+    
+    peso_jogador_casa = peso_rec * ((pts_fora / 1500.0) ** ALPHA_ADVERSARIO_JOGADOR)
+    peso_jogador_fora = peso_rec * ((pts_casa / 1500.0) ** ALPHA_ADVERSARIO_JOGADOR)
+    
     gols = extrair_jogadores(row["gols"])
     assists = extrair_jogadores(row["assistencias"])
     
-    time_c = row["time_casa"]
-    time_f = row["time_fora"]
-    
     for j in gols:
-        if j in jogadores_convocados.get(time_c, []): distribuicao_gols[time_c][j] += peso
-        if j in jogadores_convocados.get(time_f, []): distribuicao_gols[time_f][j] += peso
+        if j in jogadores_convocados.get(t_casa, []): distribuicao_gols[t_casa][j] += peso_jogador_casa
+        if j in jogadores_convocados.get(t_fora, []): distribuicao_gols[t_fora][j] += peso_jogador_fora
             
     for j in assists:
-        if j in jogadores_convocados.get(time_c, []): distribuicao_assists[time_c][j] += peso
-        if j in jogadores_convocados.get(time_f, []): distribuicao_assists[time_f][j] += peso
+        if j in jogadores_convocados.get(t_casa, []): distribuicao_assists[t_casa][j] += peso_jogador_casa
+        if j in jogadores_convocados.get(t_fora, []): distribuicao_assists[t_fora][j] += peso_jogador_fora
+
+# Fallback: se o time não tem batedor definido, o maior artilheiro ganha o peso (2.0)
+for time, gols_jogadores in distribuicao_gols.items():
+    if time not in PESO_COBRADOR_PENALTI and gols_jogadores:
+        # Pega o jogador com maior peso na distribuição de gols histórica
+        artilheiro = max(gols_jogadores.items(), key=lambda x: x[1])[0]
+        PESO_COBRADOR_PENALTI[time] = {artilheiro: 2.0}
 
 def sortear_jogador_evento(time, evento="gol"):
     dic_time = distribuicao_gols[time] if evento == "gol" else distribuicao_assists[time]
@@ -266,11 +356,20 @@ def sortear_jogador_evento(time, evento="gol"):
     opcoes = list(dic_time.keys())
     pesos = list(dic_time.values())
     
-    if evento == "gol" and time in BATEDORES_PENALTI:
-        if np.random.random() < 0.15:
-            batedores_validos = [b for b in BATEDORES_PENALTI[time] if b in jogadores_convocados.get(time, [])]
-            if batedores_validos:
-                return np.random.choice(batedores_validos)
+    # Laplace smoothing (evitar que 1 único jogador tenha 100% dos gols/assists)
+    # Dá um "peso base" para "Outros" ou distribui suavemente
+    if "Outros" not in opcoes:
+        opcoes.append("Outros (Geral)")
+        pesos.append(0.0)
+    
+    # Adicionar 1 de peso para todos, espalhando a probabilidade
+    pesos = [p + 1.0 for p in pesos]
+    
+    if evento == "gol" and time in PESO_COBRADOR_PENALTI:
+        pesos = [
+            p * PESO_COBRADOR_PENALTI[time].get(j, 1.0)
+            for j, p in zip(opcoes, pesos)
+        ]
     
     probabilidades = np.array(pesos) / sum(pesos)
     return np.random.choice(opcoes, p=probabilidades)
@@ -279,41 +378,70 @@ def sortear_jogador_evento(time, evento="gol"):
 # SIMULAÇÃO MONTE CARLO (EXECUÇÃO GERAL)
 # =========================================================
 
+def _calc_xg_base(t1, t2, form1, form2):
+    perf1 = PERFIL_FORMACAO.get(form1, {"idx_ataque": MEDIA_IDX_ATAQUE, "idx_defesa": MEDIA_IDX_DEFESA})
+    perf2 = PERFIL_FORMACAO.get(form2, {"idx_ataque": MEDIA_IDX_ATAQUE, "idx_defesa": MEDIA_IDX_DEFESA})
+    
+    mod_form1_atk = 1.0 + ALPHA_FORMACAO * (perf1["idx_ataque"] - MEDIA_IDX_ATAQUE) / max(MEDIA_IDX_ATAQUE, 0.01)
+    mod_form2_atk = 1.0 + ALPHA_FORMACAO * (perf2["idx_ataque"] - MEDIA_IDX_ATAQUE) / max(MEDIA_IDX_ATAQUE, 0.01)
+    mod_form1_def = 1.0 - ALPHA_FORMACAO * (perf1["idx_defesa"] - MEDIA_IDX_DEFESA) / max(MEDIA_IDX_DEFESA, 0.01)
+    mod_form2_def = 1.0 - ALPHA_FORMACAO * (perf2["idx_defesa"] - MEDIA_IDX_DEFESA) / max(MEDIA_IDX_DEFESA, 0.01)
+    
+    xg1 = (forca_ataque_global[t1] * forca_defesa_global[t2]) * MEDIA_GOLS_LIGA * mod_form1_atk * mod_form2_def
+    xg2 = (forca_ataque_global[t2] * forca_defesa_global[t1]) * MEDIA_GOLS_LIGA * mod_form2_atk * mod_form1_def
+    
+    xg1 *= 1.0 + ALPHA_SOLIDEZ * (0.5 - indice_solidez[t2])
+    xg2 *= 1.0 + ALPHA_SOLIDEZ * (0.5 - indice_solidez[t1])
+    
+    # MULTIPLICADOR DE FORÇA BRUTA (Ranking FIFA)
+    # Impede que times fracos fiquem "parelhos" com times fortes por causa de dados curtos.
+    pts1 = obter_pontos_fifa(t1)
+    pts2 = obter_pontos_fifa(t2)
+    ratio = pts1 / max(500, pts2)
+    
+    # Se o ratio for 1.2 (ex: 1800 vs 1500), 1.2^1.0 = 1.20 (+20% gols pro forte)
+    # Se o ratio for 1.5 (ex: 1800 vs 1200), 1.5^1.0 = 1.50 (+50% gols pro forte)
+    xg1 *= (ratio ** 1.0)
+    xg2 *= ((1.0 / ratio) ** 1.0)
+    
+    return xg1, xg2
+
 def simular_jogo(t1, t2):
-    # Atualizar formações baseadas no estado da Cadeia de Markov
     form1 = prever_formacao(t1)
     form2 = prever_formacao(t2)
     atualizar_estado_formacao(t1, form1)
     atualizar_estado_formacao(t2, form2)
     
-    # Dixon-Coles com média da liga (a força já embutiu o peso do ranking no treinamento)
-    xg1 = (forca_ataque_global[t1] * forca_defesa_global[t2]) * MEDIA_GOLS_LIGA
-    xg2 = (forca_ataque_global[t2] * forca_defesa_global[t1]) * MEDIA_GOLS_LIGA
+    xg1, xg2 = _calc_xg_base(t1, t2, form1, form2)
     
-    # Vantagem de mandante (Hosts) - aumenta xG em 8% e diminui do adversário
-    if t1 in HOST_TEAMS:
-        xg1 *= 1.08
-        xg2 *= 0.92
-    if t2 in HOST_TEAMS:
-        xg2 *= 1.08
-        xg1 *= 0.92
+    if t1 in HOST_BONUS:
+        xg1 *= HOST_BONUS[t1]
+        xg2 *= HOST_PENALTY[t1]
+    if t2 in HOST_BONUS:
+        xg2 *= HOST_BONUS[t2]
+        xg1 *= HOST_PENALTY[t2]
         
     gols1 = np.random.poisson(max(0.1, xg1))
     gols2 = np.random.poisson(max(0.1, xg2))
     
     return gols1, gols2
 
-def simular_prorrogacao(t1, t2):
-    # Prorrogação é aprox 30% do tempo de um jogo (30 mins vs 90 mins)
-    xg1 = (forca_ataque_global[t1] * forca_defesa_global[t2]) * MEDIA_GOLS_LIGA * 0.33
-    xg2 = (forca_ataque_global[t2] * forca_defesa_global[t1]) * MEDIA_GOLS_LIGA * 0.33
+FATOR_PRORROGACAO = 0.22
+
+def simular_prorrogacao(t1, t2, form1=None, form2=None):
+    if not form1: form1 = ultima_formacao_time.get(t1, "4-3-3")
+    if not form2: form2 = ultima_formacao_time.get(t2, "4-3-3")
     
-    if t1 in HOST_TEAMS:
-        xg1 *= 1.08
-        xg2 *= 0.92
-    if t2 in HOST_TEAMS:
-        xg2 *= 1.08
-        xg1 *= 0.92
+    xg1, xg2 = _calc_xg_base(t1, t2, form1, form2)
+    xg1 *= FATOR_PRORROGACAO
+    xg2 *= FATOR_PRORROGACAO
+    
+    if t1 in HOST_BONUS:
+        xg1 *= HOST_BONUS[t1]
+        xg2 *= HOST_PENALTY[t1]
+    if t2 in HOST_BONUS:
+        xg2 *= HOST_BONUS[t2]
+        xg1 *= HOST_PENALTY[t2]
         
     return np.random.poisson(max(0.05, xg1)), np.random.poisson(max(0.05, xg2))
 

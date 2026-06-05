@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard preditivo da Copa do Mundo 2026 — Motor Monte Carlo com 50.000 simulações.">
+    <title>Copa do Mundo 2026 — Protactic Predictor</title>
+    <link rel="icon" href="logo_preta.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="stars-container"></div>
+
+    <header class="app-header">
+        <div class="header-content">
+            <div class="brand">
+                <img id="app-logo" src="logo.png" alt="Protactic Logo" onerror="this.style.display='none'">
+                <div class="brand-text">
+                    <span class="brand-sub">COPA DO MUNDO 2026 · MOTOR PREDITIVO</span>
+                    <h1 class="brand-title">PROTACTIC ENGINE</h1>
+                </div>
+            </div>
+            <div class="simulation-status">
+                <span class="status-dot green"></span>
+                <span class="status-text">50.000 Simulações Monte Carlo · Resultados Consolidados</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-layout">
+
+        <!-- ===== SEÇÃO 1: FAVORITOS AO TÍTULO ===== -->
+        <section class="section-block">
+            <h2 class="section-title">🏆 Grandes Favoritos ao Título</h2>
+            <div class="favorites-podium" id="favorites-podium">
+                <div class="loading-placeholder">Carregando simulações...</div>
+            </div>
+        </section>
+
+        <!-- ===== SEÇÃO 2: CHAVEAMENTO MATA-MATA ===== -->
+        <section class="section-block">
+            <h2 class="section-title">⚡ Chaveamento Previsto — Mata-Mata</h2>
+            <p class="section-desc">Cenário mais provável com base nas 50.000 simulações. Os times exibidos são os mais prováveis classificados em cada posição.</p>
+            <div class="bracket-wrapper" id="bracket-wrapper">
+                <div class="loading-placeholder">Aguardando dados do mata-mata...</div>
+            </div>
+        </section>
+
+        <!-- ===== SEÇÃO 3: FASE DE GRUPOS ===== -->
+        <section class="section-block">
+            <h2 class="section-title">🌍 Projeção — Fase de Grupos</h2>
+            <p class="section-desc">Posição esperada por seleção dentro do grupo. % de classificação inclui Top 2 + melhores terceiros colocados.</p>
+            <div class="groups-grid" id="groups-grid">
+                <div class="loading-placeholder">Carregando grupos...</div>
+            </div>
+        </section>
+
+        <!-- ===== SEÇÃO 4: ARTILHEIROS E ASSISTENTES ===== -->
+        <section class="section-block">
+            <h2 class="section-title">📊 Premiações Individuais (Previsão)</h2>
+            <div class="stats-grid">
+                <div class="glass-card golden-card" id="golden-boot-card">
+                    <div class="loading-placeholder">Carregando artilheiro...</div>
+                </div>
+                <div class="glass-card golden-card" id="golden-playmaker-card">
+                    <div class="loading-placeholder">Carregando assistente...</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="app-footer">
+        <div class="footer-content">
+            <p>&copy; 2026 PROTACTIC Predictor Engine — Copa do Mundo FIFA 2026</p>
+            <p class="footer-note">Algoritmo Dixon-Coles · Cadeia de Markov · Monte Carlo · Bayesian Shrinkage</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
