@@ -4,6 +4,7 @@ from collections import defaultdict, Counter
 import mlflow
 import os
 import sys
+import json
 from functools import cmp_to_key
 
 # Adicionar raiz ao path para importar motor_simulacao
@@ -14,7 +15,15 @@ import motor_simulacao
 # CONFIGURAÇÕES E CONSTANTES
 # =========================================================
 ARQUIVO_CLASSIFICACAO = "copa/classificacao.csv"
-SIMULACOES = 50000
+
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.json")
+try:
+    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+        config_data = json.load(f)
+    SIMULACOES = config_data.get("SIMULACOES", 50000)
+except FileNotFoundError:
+    print(f"Aviso: {CONFIG_PATH} não encontrado. Usando 50000 simulações padrão.")
+    SIMULACOES = 50000
 
 print("Carregando bases de dados do Global...")
 try:
@@ -251,21 +260,22 @@ if __name__ == "__main__":
             })
             
         df_mm = pd.DataFrame(dados_mata_mata).sort_values("Campeão (%)", ascending=False)
-        df_mm.to_csv("chances_mata_mata.csv", index=False)
-        mlflow.log_artifact("chances_mata_mata.csv")
+        os.makedirs("copa/outputs", exist_ok=True)
+        df_mm.to_csv("copa/outputs/chances_mata_mata.csv", index=False)
+        mlflow.log_artifact("copa/outputs/chances_mata_mata.csv")
         
         # Artilheiros
         df_art = pd.DataFrame(list(artilheiros.items()), columns=["Jogador", "Gols_Simulados"])
         df_art["Gols_Medios_Torneio"] = round(df_art["Gols_Simulados"] / SIMULACOES, 2)
         df_art = df_art.sort_values("Gols_Medios_Torneio", ascending=False).head(30)
-        df_art.to_csv("provaveis_artilheiros.csv", index=False)
-        mlflow.log_artifact("provaveis_artilheiros.csv")
+        df_art.to_csv("copa/outputs/provaveis_artilheiros.csv", index=False)
+        mlflow.log_artifact("copa/outputs/provaveis_artilheiros.csv")
         
         # Assistentes
         df_ass = pd.DataFrame(list(assistentes.items()), columns=["Jogador", "Assists_Simuladas"])
         df_ass["Assists_Medias_Torneio"] = round(df_ass["Assists_Simuladas"] / SIMULACOES, 2)
         df_ass = df_ass.sort_values("Assists_Medias_Torneio", ascending=False).head(30)
-        df_ass.to_csv("provaveis_assistentes.csv", index=False)
-        mlflow.log_artifact("provaveis_assistentes.csv")
+        df_ass.to_csv("copa/outputs/provaveis_assistentes.csv", index=False)
+        mlflow.log_artifact("copa/outputs/provaveis_assistentes.csv")
         
         print("Tabelas de Mata-Mata e Estatísticas de Jogadores geradas com sucesso!")

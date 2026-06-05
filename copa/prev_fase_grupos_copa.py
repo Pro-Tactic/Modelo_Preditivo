@@ -4,6 +4,7 @@ from collections import defaultdict, Counter
 import mlflow
 import os
 import sys
+import json
 from functools import cmp_to_key
 
 # Adicionar raiz ao path para importar motor_simulacao
@@ -14,7 +15,15 @@ import motor_simulacao
 # CONFIGURAÇÕES E CONSTANTES
 # =========================================================
 ARQUIVO_CLASSIFICACAO = "copa/classificacao.csv"
-SIMULACOES = 50000
+
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.json")
+try:
+    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+        config_data = json.load(f)
+    SIMULACOES = config_data.get("SIMULACOES", 50000)
+except FileNotFoundError:
+    print(f"Aviso: {CONFIG_PATH} não encontrado. Usando 50000 simulações padrão.")
+    SIMULACOES = 50000
 
 # =========================================================
 # CARGA DE DADOS
@@ -184,20 +193,21 @@ if __name__ == "__main__":
             })
         
         df_finais = pd.DataFrame(dados_finais).sort_values("Chance Classificação (Top2 + Melhores 3ºs) (%)", ascending=False)
-        df_finais.to_csv("probabilidades_grupos_copa.csv", index=False)
-        mlflow.log_artifact("probabilidades_grupos_copa.csv")
+        os.makedirs("copa/outputs", exist_ok=True)
+        df_finais.to_csv("copa/outputs/probabilidades_grupos_copa.csv", index=False)
+        mlflow.log_artifact("copa/outputs/probabilidades_grupos_copa.csv")
         
         df_art = pd.DataFrame(list(artilheiros.items()), columns=["Jogador", "Gols_Simulados"])
         df_art["Gols_Medios_Torneio"] = round(df_art["Gols_Simulados"] / SIMULACOES, 2)
         df_art = df_art.sort_values("Gols_Medios_Torneio", ascending=False).head(30)
-        df_art.to_csv("provaveis_artilheiros.csv", index=False)
-        mlflow.log_artifact("provaveis_artilheiros.csv")
+        df_art.to_csv("copa/outputs/provaveis_artilheiros.csv", index=False)
+        mlflow.log_artifact("copa/outputs/provaveis_artilheiros.csv")
         
         df_ass = pd.DataFrame(list(assistentes.items()), columns=["Jogador", "Assists_Simuladas"])
         df_ass["Assists_Medias_Torneio"] = round(df_ass["Assists_Simuladas"] / SIMULACOES, 2)
         df_ass = df_ass.sort_values("Assists_Medias_Torneio", ascending=False).head(30)
-        df_ass.to_csv("provaveis_assistentes.csv", index=False)
-        mlflow.log_artifact("provaveis_assistentes.csv")
+        df_ass.to_csv("copa/outputs/provaveis_assistentes.csv", index=False)
+        mlflow.log_artifact("copa/outputs/provaveis_assistentes.csv")
         
         placares_lista = []
         for jogo, placares in placares_provaveis.items():
@@ -209,7 +219,7 @@ if __name__ == "__main__":
             })
     
         df_placares = pd.DataFrame(placares_lista).sort_values("Confronto")
-        df_placares.to_csv("placares_provaveis.csv", index=False)
-        mlflow.log_artifact("placares_provaveis.csv")
+        df_placares.to_csv("copa/outputs/placares_provaveis.csv", index=False)
+        mlflow.log_artifact("copa/outputs/placares_provaveis.csv")
         
     print("Concluído! Tabelas geradas localmente e registradas no MLflow.")

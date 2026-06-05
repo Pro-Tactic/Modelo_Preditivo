@@ -346,32 +346,46 @@ for time, gols_jogadores in distribuicao_gols.items():
         artilheiro = max(gols_jogadores.items(), key=lambda x: x[1])[0]
         PESO_COBRADOR_PENALTI[time] = {artilheiro: 2.0}
 
+_cache_probabilidades = {"gol": {}, "assistencia": {}}
+
+def _precalcular_probabilidades():
+    global _cache_probabilidades
+    _cache_probabilidades = {"gol": {}, "assistencia": {}}
+    
+    times = set(list(distribuicao_gols.keys()) + list(distribuicao_assists.keys()) + list(jogadores_convocados.keys()))
+    for time in times:
+        for evento in ["gol", "assistencia"]:
+            dic_time = distribuicao_gols[time] if evento == "gol" else distribuicao_assists[time]
+            
+            if not dic_time or sum(dic_time.values()) == 0:
+                convs = list(jogadores_convocados.get(time, ["Desconhecido"]))
+                _cache_probabilidades[evento][time] = (convs, np.ones(len(convs))/len(convs))
+                continue
+                
+            opcoes = list(dic_time.keys())
+            pesos = list(dic_time.values())
+            
+            if "Outros" not in opcoes:
+                opcoes.append("Outros (Geral)")
+                pesos.append(0.0)
+            
+            pesos = [p + 1.0 for p in pesos]
+            
+            if evento == "gol" and time in PESO_COBRADOR_PENALTI:
+                pesos = [
+                    p * PESO_COBRADOR_PENALTI[time].get(j, 1.0)
+                    for j, p in zip(opcoes, pesos)
+                ]
+            
+            probabilidades = np.array(pesos) / sum(pesos)
+            _cache_probabilidades[evento][time] = (opcoes, probabilidades)
+
+_precalcular_probabilidades()
+
 def sortear_jogador_evento(time, evento="gol"):
-    dic_time = distribuicao_gols[time] if evento == "gol" else distribuicao_assists[time]
-    
-    if not dic_time or sum(dic_time.values()) == 0:
-        convs = list(jogadores_convocados.get(time, ["Desconhecido"]))
-        return np.random.choice(convs)
-        
-    opcoes = list(dic_time.keys())
-    pesos = list(dic_time.values())
-    
-    # Laplace smoothing (evitar que 1 único jogador tenha 100% dos gols/assists)
-    # Dá um "peso base" para "Outros" ou distribui suavemente
-    if "Outros" not in opcoes:
-        opcoes.append("Outros (Geral)")
-        pesos.append(0.0)
-    
-    # Adicionar 1 de peso para todos, espalhando a probabilidade
-    pesos = [p + 1.0 for p in pesos]
-    
-    if evento == "gol" and time in PESO_COBRADOR_PENALTI:
-        pesos = [
-            p * PESO_COBRADOR_PENALTI[time].get(j, 1.0)
-            for j, p in zip(opcoes, pesos)
-        ]
-    
-    probabilidades = np.array(pesos) / sum(pesos)
+    if time not in _cache_probabilidades[evento]:
+        return "Desconhecido"
+    opcoes, probabilidades = _cache_probabilidades[evento][time]
     return np.random.choice(opcoes, p=probabilidades)
 
 # =========================================================
