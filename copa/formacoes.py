@@ -21,6 +21,7 @@ MAPA_FORMACAO = {
     "4-4-1-1": ["GK","RB","RCB","LCB","LB","RM","CM1","CM2","LM","CAM","ST"],
     "4-4-2":   ["GK","RB","RCB","LCB","LB","RM","CM1","CM2","LM","ST1","ST2"],
     "4-5-1":   ["GK","RB","RCB","LCB","LB","RM","CM1","CM2","CM3","LM","ST"],
+    "5-2-3":   ["GK","RWB","RCB","CB","LCB","LWB","CM1","CM2","RW","ST","LW"],
     "5-3-2":   ["GK","RWB","RCB","CB","LCB","LWB","CM1","CM2","CM3","ST1","ST2"],
     "5-4-1":   ["GK","RWB","RCB","CB","LCB","LWB","RM","CM1","CM2","LM","ST"],
 }
