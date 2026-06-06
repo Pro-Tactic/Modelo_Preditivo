@@ -104,6 +104,21 @@ escalacao_A = [
     ("ST2", "Igor Thiago")
 ]
 
+# Brasil (Escalação Reserva fixada pelo usuário para o 2º tempo)
+escalacao_A_2T = [
+    ("GK", "Weverton"),
+    ("RB", "Roger Ibañez"),
+    ("RCB", "Bremer"),
+    ("LCB", "Danilo"),
+    ("LB", "Alex Sandro"),
+    ("RM", "Rayan"),
+    ("CM1", "Fabinho"),
+    ("CM2", "Danilo Oliveira"),
+    ("LM", "Gabriel Martinelli"),
+    ("ST1", "Matheus Cunha"),
+    ("ST2", "Endrick")
+]
+
 # =========================================================
 # ESCALAÇÃO POR SLOT TÁTICO
 # =========================================================
@@ -180,6 +195,12 @@ escalacao_B = [
     ("LW", "Mahmoud Trézéguet")
 ]
 
+# Egito (Escalação Reserva algorítmica para o 2º tempo)
+titulares_B = [j for s, j in escalacao_B]
+jogadores_fora.extend(titulares_B)
+escalacao_B_2T = escalacao_tatica(jogos_filtrados, TIME_B, formacao_B, TIME_A)
+for j in titulares_B: jogadores_fora.remove(j)
+
 # =========================================================
 # FORÇA OFENSIVA E DEFENSIVA (PENALIZAÇÕES POR DESFALQUE)
 # =========================================================
@@ -246,6 +267,7 @@ motor_simulacao.forca_defesa_global[TIME_B] *= (1 + penalidade_def_B)
 # =========================================================
 motor_simulacao.PESO_COBRADOR_PENALTI[TIME_A] = {
     "Igor Thiago": 1.5,
+    "Endrick": 1.5,
 }
 motor_simulacao.PESO_COBRADOR_PENALTI[TIME_B] = {
     "Mohamed Salah": 1.5,
@@ -264,21 +286,42 @@ vitorias_B = 0
 empates = 0
 placares = defaultdict(int)
 probs_gol = defaultdict(int)
+probs_assist = defaultdict(int)
 
-# Função para sortear gol restrito à escalação (evita reservas terem 30% de chance)
-def sortear_gol_titular(time, escalacao):
+cnt_A_primeiro = 0
+cnt_B_primeiro = 0
+cnt_sem_gol = 0
+
+cnt_A_liderou = 0
+cnt_B_liderou = 0
+cnt_nenhum_liderou = 0
+
+cnt_gol_1T = 0
+cnt_gol_2T = 0
+cnt_gol_ambos = 0
+
+# Função para sortear evento (gol ou assistência) restrito à escalação do momento
+def sortear_evento_titular(time, escalacao, evento="gol"):
     opcoes = []
     pesos = []
+    dic_evento = motor_simulacao.distribuicao_gols if evento == "gol" else motor_simulacao.distribuicao_assists
+    
     for slot, jogador in escalacao:
         if jogador == "N/D": continue
-        peso = motor_simulacao.distribuicao_gols[time].get(jogador, 0)
-        if time in motor_simulacao.PESO_COBRADOR_PENALTI:
+        peso = dic_evento[time].get(jogador, 0)
+        
+        if evento == "gol" and time in motor_simulacao.PESO_COBRADOR_PENALTI:
             peso *= motor_simulacao.PESO_COBRADOR_PENALTI[time].get(jogador, 1.0)
+            
         opcoes.append(jogador)
         pesos.append(peso + 0.1) # peso mínimo para qualquer titular
     
-    opcoes.append("Reservas/Outros")
-    pesos.append(0.5) # peso fixo para o banco de reservas
+    if evento == "assistencia":
+        opcoes.append("Sem Assistência / Outros")
+        pesos.append(sum(pesos) * 0.25) # 20% das vezes um gol não tem assistência direta
+    else:
+        opcoes.append("Reservas/Outros")
+        pesos.append(0.5) # peso fixo residual para gols
     
     probabilidades = np.array(pesos) / sum(pesos)
     return np.random.choice(opcoes, p=probabilidades)
@@ -298,15 +341,69 @@ with mlflow.start_run():
         elif golsB > golsA: vitorias_B += 1
         else: empates += 1
             
+        eventos_partida = []
+            
         for _ in range(golsA):
-            art = sortear_gol_titular(TIME_A, escalacao_A)
+            minuto = np.random.randint(1, 91)
+            eventos_partida.append((minuto, TIME_A))
+            escalacao_atual = escalacao_A if minuto <= 45 else escalacao_A_2T
+            
+            art = sortear_evento_titular(TIME_A, escalacao_atual, "gol")
             if art not in jogadores_fora:
                 probs_gol[f"{art} ({TIME_A})"] += 1
                 
+            ast = sortear_evento_titular(TIME_A, escalacao_atual, "assistencia")
+            if ast not in jogadores_fora and ast != "Sem Assistência / Outros":
+                probs_assist[f"{ast} ({TIME_A})"] += 1
+                
         for _ in range(golsB):
-            art = sortear_gol_titular(TIME_B, escalacao_B)
+            minuto = np.random.randint(1, 91)
+            eventos_partida.append((minuto, TIME_B))
+            escalacao_atual = escalacao_B if minuto <= 45 else escalacao_B_2T
+            
+            art = sortear_evento_titular(TIME_B, escalacao_atual, "gol")
             if art not in jogadores_fora:
                 probs_gol[f"{art} ({TIME_B})"] += 1
+                
+            ast = sortear_evento_titular(TIME_B, escalacao_atual, "assistencia")
+            if ast not in jogadores_fora and ast != "Sem Assistência / Outros":
+                probs_assist[f"{ast} ({TIME_B})"] += 1
+
+        if not eventos_partida:
+            cnt_sem_gol += 1
+            cnt_nenhum_liderou += 1
+        else:
+            eventos_partida.sort(key=lambda x: x[0])
+            if eventos_partida[0][1] == TIME_A:
+                cnt_A_primeiro += 1
+            else:
+                cnt_B_primeiro += 1
+                
+            score_A = 0
+            score_B = 0
+            liderou_A = False
+            liderou_B = False
+            
+            teve_1T = False
+            teve_2T = False
+            
+            for m, time in eventos_partida:
+                if m <= 45: teve_1T = True
+                else: teve_2T = True
+                
+                if time == TIME_A: score_A += 1
+                else: score_B += 1
+                
+                if score_A > score_B: liderou_A = True
+                elif score_B > score_A: liderou_B = True
+                
+            if liderou_A: cnt_A_liderou += 1
+            if liderou_B: cnt_B_liderou += 1
+            if not liderou_A and not liderou_B: cnt_nenhum_liderou += 1
+            
+            if teve_1T and teve_2T: cnt_gol_ambos += 1
+            elif teve_1T: cnt_gol_1T += 1
+            elif teve_2T: cnt_gol_2T += 1
 
     prob_vit_A = vitorias_A / SIMULACOES
     prob_emp = empates / SIMULACOES
@@ -330,6 +427,12 @@ with mlflow.start_run():
     ).sort_values("Probabilidade de Marcar (%)", ascending=False).head(30)
     df_gols.to_csv("copa/outputs/brasil_egito_goleadores.csv", index=False)
     mlflow.log_artifact("copa/outputs/brasil_egito_goleadores.csv")
+
+    df_asts = pd.DataFrame(
+        [{"Jogador": j, "Probabilidade de Dar Assistência (%)": round((c / SIMULACOES) * 100, 2)} for j, c in probs_assist.items()]
+    ).sort_values("Probabilidade de Dar Assistência (%)", ascending=False).head(30)
+    df_asts.to_csv("copa/outputs/brasil_egito_assistentes.csv", index=False)
+    mlflow.log_artifact("copa/outputs/brasil_egito_assistentes.csv")
 
 # =========================================================
 # RESULTADOS NO CONSOLE
@@ -364,7 +467,30 @@ print("\n" + "="*50)
 print("PROBABILIDADE DE MARCAR GOL (QUALQUER MOMENTO)")
 print("="*50)
 top_gols = sorted(probs_gol.items(), key=lambda x: x[1], reverse=True)[:10]
-for jogador, count in top_gols:
-    prob_marcar = (count / SIMULACOES) * 100
-    print(f"{jogador.ljust(30)} {prob_marcar:.2f}%")
-print("==================================================\n")
+for art, count in top_gols:
+    print(f"{art.ljust(30)} {(count/SIMULACOES)*100:.2f}%")
+print("="*50)
+
+print("\n" + "="*50)
+print("PROBABILIDADE DE ASSISTÊNCIA (xA)")
+print("="*50)
+top_asts = sorted(probs_assist.items(), key=lambda x: x[1], reverse=True)[:10]
+for ast, count in top_asts:
+    print(f"{ast.ljust(30)} {(count/SIMULACOES)*100:.2f}%")
+print("="*50)
+
+print("\n" + "="*50)
+print("MÉTRICAS DA PARTIDA (LINHA DO TEMPO)")
+print("="*50)
+
+print(f"Probabilidade de {TIME_A} marcar o primeiro gol: {(cnt_A_primeiro/SIMULACOES)*100:.2f}%")
+print(f"Probabilidade de {TIME_B} marcar o primeiro gol: {(cnt_B_primeiro/SIMULACOES)*100:.2f}%")
+print(f"Probabilidade de não sair gol na partida: {(cnt_sem_gol/SIMULACOES)*100:.2f}%")
+print("-" * 50)
+print(f"Probabilidade de {TIME_A} estar à frente do placar em algum momento: {(cnt_A_liderou/SIMULACOES)*100:.2f}%")
+print(f"Probabilidade de {TIME_B} estar à frente do placar em algum momento: {(cnt_B_liderou/SIMULACOES)*100:.2f}%")
+print("-" * 50)
+print(f"Partidas com gols APENAS no 1º Tempo: {(cnt_gol_1T/SIMULACOES)*100:.2f}%")
+print(f"Partidas com gols APENAS no 2º Tempo: {(cnt_gol_2T/SIMULACOES)*100:.2f}%")
+print(f"Partidas com gols nos DOIS Tempos:    {(cnt_gol_ambos/SIMULACOES)*100:.2f}%")
+print("="*50)
