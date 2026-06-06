@@ -353,11 +353,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const [chances, grupos, artilheiros, assistentes, classificacao] = await Promise.all([
-        loadCSV("../../chances_mata_mata.csv"),
-        loadCSV("../../probabilidades_grupos_copa.csv"),
-        loadCSV("../../provaveis_artilheiros.csv"),
-        loadCSV("../../provaveis_assistentes.csv"),
-        loadCSV("../../copa/classificacao.csv"),
+        loadCSV("../outputs/chances_mata_mata.csv"),
+        loadCSV("../outputs/probabilidades_grupos_copa.csv"),
+        loadCSV("../outputs/provaveis_artilheiros.csv"),
+        loadCSV("../outputs/provaveis_assistentes.csv"),
+        loadCSV("../classificacao.csv"),
     ]);
 
     if (chances.length)       renderFavorites(chances);
