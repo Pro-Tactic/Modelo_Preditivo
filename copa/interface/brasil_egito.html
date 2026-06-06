@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard de previsão Brasil x Egito — Motor Monte Carlo 100.000 simulações.">
+    <title>Brasil × Egito — Protactic Predictor</title>
+    <link rel="icon" href="logo_preta.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="brasil_egito.css">
+</head>
+<body>
+    <div class="stars-container"></div>
+
+    <header class="app-header">
+        <div class="header-content">
+            <div class="brand">
+                <img id="app-logo" src="logo.png" alt="Protactic" onerror="this.style.display='none'">
+                <div class="brand-text">
+                    <span class="brand-sub">AMISTOSO INTERNACIONAL · COPA DO MUNDO 2026</span>
+                    <h1 class="brand-title">PROTACTIC MATCH PREDICTOR</h1>
+                </div>
+            </div>
+            <div class="simulation-status">
+                <span class="status-dot green"></span>
+                <span class="status-text" id="status-text">100.000 Simulações Monte Carlo</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-main">
+
+        <!-- ── LOADING ─────────────────────────────────────── -->
+        <div id="loading-screen" class="loading-screen">
+            <div class="loader-circle"></div>
+            <p class="loading-label">Carregando resultados da simulação...</p>
+        </div>
+
+        <!-- ── ERRO (sem CSVs) ─────────────────────────────── -->
+        <div id="error-screen" class="error-screen hidden">
+            <span class="error-icon">⚠️</span>
+            <h2>Resultados não encontrados</h2>
+            <p>Execute o script de simulação primeiro e depois recarregue a página:</p>
+            <code>python copa/prev_brasil_egito.py</code>
+        </div>
+
+        <!-- ── CONTEÚDO PRINCIPAL ──────────────────────────── -->
+        <div id="main-content" class="main-content hidden">
+
+            <!-- ROW 1: BANNER + BARRA DE PROBABILIDADE -->
+            <section class="glass-card matchup-card">
+
+                <div class="matchup-banner">
+                    <div class="team-side team-brasil">
+                        <img class="team-flag" src="https://flagcdn.com/w80/br.png" alt="Brasil">
+                        <span class="team-name">Brasil</span>
+                        <span class="team-formation" id="formacao-brasil">4-4-2</span>
+                    </div>
+                    <div class="center-vs">
+                        <div class="vs-text">VS</div>
+                        <div class="sim-label">100.000 simulações</div>
+                    </div>
+                    <div class="team-side team-egito">
+                        <img class="team-flag" src="https://flagcdn.com/w80/eg.png" alt="Egito">
+                        <span class="team-name">Egito</span>
+                        <span class="team-formation" id="formacao-egito">5-2-3</span>
+                    </div>
+                </div>
+
+                <!-- barra de probabilidade -->
+                <div class="prob-track-wrapper">
+                    <div class="prob-track">
+                        <div id="bar-brasil" class="prob-seg seg-brasil" style="width:50%">
+                            <span class="seg-pct" id="pct-brasil">--%</span>
+                        </div>
+                        <div id="bar-empate" class="prob-seg seg-empate" style="width:25%">
+                            <span class="seg-pct" id="pct-empate">--%</span>
+                        </div>
+                        <div id="bar-egito" class="prob-seg seg-egito" style="width:25%">
+                            <span class="seg-pct" id="pct-egito">--%</span>
+                        </div>
+                    </div>
+                    <div class="track-legend">
+                        <span><span class="dot green"></span>Vitória Brasil</span>
+                        <span><span class="dot gray"></span>Empate</span>
+                        <span><span class="dot red"></span>Vitória Egito</span>
+                    </div>
+                </div>
+
+                <!-- quick stats -->
+                <div class="quick-stats">
+                    <div class="qs-box">
+                        <span class="qs-label">Placar Mais Provável</span>
+                        <span class="qs-val white" id="qs-placar">--</span>
+                    </div>
+                    <div class="qs-box">
+                        <span class="qs-label">Favorito</span>
+                        <span class="qs-val green" id="qs-fav">--</span>
+                        <span class="qs-sub" id="qs-fav-pct">--%</span>
+                    </div>
+                    <div class="qs-box">
+                        <span class="qs-label">Brasil marca 1º gol</span>
+                        <span class="qs-val green" id="qs-1gol-br">--%</span>
+                    </div>
+                    <div class="qs-box">
+                        <span class="qs-label">Egito marca 1º gol</span>
+                        <span class="qs-val red" id="qs-1gol-eg">--%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROW 2: CAMPOS TÁTICOS (lado a lado) -->
+            <section class="two-col">
+
+                <!-- campo Brasil -->
+                <div class="glass-card pitch-card">
+                    <h3 class="card-title"><span>⚽</span> Escalação — <span class="green">Brasil</span></h3>
+                    <div class="pitch-container">
+                        <div class="pitch" id="pitch-brasil">
+                            <div class="pitch-line center-line"></div>
+                            <div class="pitch-line center-circle"></div>
+                            <div class="pitch-line penalty-box penalty-top"></div>
+                            <div class="pitch-line penalty-box penalty-bot"></div>
+                            <div class="players-layer" id="players-brasil"></div>
+                        </div>
+                        <div class="form-badge" id="badge-brasil">4-4-2</div>
+                    </div>
+                </div>
+
+                <!-- campo Egito -->
+                <div class="glass-card pitch-card">
+                    <h3 class="card-title"><span>⚽</span> Escalação — <span class="red">Egito</span></h3>
+                    <div class="pitch-container">
+                        <div class="pitch" id="pitch-egito">
+                            <div class="pitch-line center-line"></div>
+                            <div class="pitch-line center-circle"></div>
+                            <div class="pitch-line penalty-box penalty-top"></div>
+                            <div class="pitch-line penalty-box penalty-bot"></div>
+                            <div class="players-layer" id="players-egito"></div>
+                        </div>
+                        <div class="form-badge" id="badge-egito">5-2-3</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROW 3: GRÁFICO DE PLACARES -->
+            <section class="glass-card">
+                <h3 class="card-title"><span>📊</span> Placares Mais Prováveis</h3>
+                <p class="card-desc">As 10 combinações exatas mais frequentes nas 100.000 simulações.</p>
+                <div class="chart-wrap">
+                    <canvas id="scoresChart"></canvas>
+                </div>
+            </section>
+
+            <!-- ROW 4: MÉTRICAS (3 + 3) -->
+            <section class="glass-card">
+                <h3 class="card-title"><span>⏱️</span> Métricas da Partida</h3>
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <span class="m-label">Brasil lidera em algum momento</span>
+                        <span class="m-val green" id="m-lead-br">--%</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="m-label">Egito lidera em algum momento</span>
+                        <span class="m-val red" id="m-lead-eg">--%</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="m-label">Partida sem gols (0×0)</span>
+                        <span class="m-val white" id="m-zerozero">--%</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="m-label">Gols apenas no 1º Tempo</span>
+                        <span class="m-val white" id="m-h1">--%</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="m-label">Gols apenas no 2º Tempo</span>
+                        <span class="m-val white" id="m-h2">--%</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="m-label">Gols nos dois tempos</span>
+                        <span class="m-val white" id="m-both">--%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ROW 5: ARTILHEIROS + ASSISTENTES -->
+            <section class="two-col">
+                <div class="glass-card">
+                    <h3 class="card-title"><span>🎯</span> Probabilidade de Gol</h3>
+                    <div class="prob-list" id="list-gols"></div>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title"><span>👟</span> Probabilidade de Assistência</h3>
+                    <div class="prob-list" id="list-assists"></div>
+                </div>
+            </section>
+
+        </div><!-- /#main-content -->
+    </main>
+
+    <footer class="app-footer">
+        <p>© 2026 PROTACTIC Predictor Engine · Dixon-Coles · Markov · Monte Carlo</p>
+    </footer>
+
+    <!-- tooltip do campo -->
+    <div class="pitch-tooltip" id="pitch-tooltip"></div>
+
+    <script src="brasil_egito.js"></script>
+</body>
+</html>
