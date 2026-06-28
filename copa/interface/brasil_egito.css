@@ -1,0 +1,394 @@
+/* ================================================================
+   DESIGN SYSTEM — Brasil × Egito
+   ================================================================ */
+:root {
+    --bg:          #020204;
+    --card:        rgba(12, 16, 24, 0.65);
+    --card-hover:  rgba(18, 24, 36, 0.82);
+    --border:      rgba(255,255,255,0.06);
+    --border-glow: rgba(255,255,255,0.13);
+
+    --white:  #FEFEFE;
+    --gray:   #A5B2D6;
+
+    --green:      #00E676;
+    --green-glow: rgba(0,230,118,0.22);
+    --red:        #FF1744;
+    --red-glow:   rgba(255,23,68,0.22);
+
+    --font-h: 'Outfit', sans-serif;
+    --font-b: 'Inter', sans-serif;
+    --ease:   0.25s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font-b);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+h1,h2,h3,h4 { font-family: var(--font-h); font-weight: 700; letter-spacing: -.02em; }
+.hidden { display: none !important; }
+.green  { color: var(--green); }
+.red    { color: var(--red); }
+.white  { color: var(--white); }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+
+/* ── starfield ── */
+.stars-container {
+    position: fixed; inset: 0;
+    background-image:
+        radial-gradient(white,rgba(255,255,255,.2) 2px,transparent 40px),
+        radial-gradient(white,rgba(255,255,255,.15) 1px,transparent 30px),
+        radial-gradient(white,rgba(255,255,255,.1) 2px,transparent 40px);
+    background-size: 550px 550px, 350px 350px, 250px 250px;
+    background-position: 0 0, 40px 60px, 130px 270px;
+    opacity: .06; z-index: -1; pointer-events: none;
+}
+
+/* ================================================================
+   HEADER
+   ================================================================ */
+.app-header {
+    background: rgba(2,2,4,.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    padding: 14px 28px;
+}
+.header-content {
+    max-width: 1340px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+#app-logo { height: 42px; border-radius: 6px; }
+
+.brand-text { display: flex; flex-direction: column; }
+.brand-sub  { font-size: .6rem; color: var(--gray); letter-spacing: .22em; font-weight: 700; }
+.brand-title { font-size: 1.45rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--white) 40%, var(--gray));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.simulation-status {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(0,230,118,.05);
+    border: 1px solid rgba(0,230,118,.18);
+    padding: 6px 14px; border-radius: 20px;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.status-dot.green { background: var(--green); box-shadow: 0 0 8px var(--green); }
+.status-text { font-size: .75rem; font-weight: 600; color: var(--green); }
+
+/* ================================================================
+   LAYOUT
+   ================================================================ */
+.page-main {
+    max-width: 1340px; margin: 32px auto;
+    padding: 0 24px; flex-grow: 1;
+    display: flex; flex-direction: column; gap: 24px;
+}
+
+/* loading / erro */
+.loading-screen, .error-screen {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px; min-height: 260px; text-align: center;
+}
+.loader-circle {
+    width: 58px; height: 58px;
+    border: 3px solid rgba(0,230,118,.1);
+    border-top-color: var(--green);
+    border-bottom-color: var(--red);
+    border-radius: 50%;
+    animation: spin 1.2s cubic-bezier(.5,0,.5,1) infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-label { color: var(--gray); font-size: .9rem; }
+.error-screen code {
+    margin-top: 8px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    padding: 8px 16px; border-radius: 8px;
+    font-size: .85rem; color: var(--green);
+}
+.error-icon { font-size: 2.5rem; }
+
+/* dois painéis lado a lado */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* ================================================================
+   CARD GLASS
+   ================================================================ */
+.glass-card {
+    background: var(--card);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    transition: border var(--ease), background var(--ease), box-shadow var(--ease);
+}
+.glass-card:hover {
+    border-color: var(--border-glow);
+    background: var(--card-hover);
+    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+.card-title {
+    font-size: 1rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .03em;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    padding-bottom: 10px; margin-bottom: 18px;
+}
+.card-desc { font-size: .8rem; color: var(--gray); margin-bottom: 14px; }
+
+/* ================================================================
+   MATCHUP BANNER
+   ================================================================ */
+.matchup-card { /* no extra styles needed */ }
+
+.matchup-banner {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    gap: 24px; margin-bottom: 28px;
+}
+
+.team-side {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px;
+    flex: 1;
+}
+.team-side.team-brasil { align-items: flex-start; padding-left: 16px; }
+.team-side.team-egito  { align-items: flex-end;   padding-right: 16px; }
+
+.team-flag { height: 52px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.4); }
+.team-name { font-family: var(--font-h); font-size: 1.6rem; font-weight: 800; }
+.team-formation {
+    font-size: .75rem; color: var(--gray);
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+    padding: 2px 10px; border-radius: 12px;
+}
+
+.center-vs { text-align: center; flex-shrink: 0; }
+.vs-text {
+    font-family: var(--font-h); font-size: 1.1rem; font-weight: 800;
+    color: var(--gray);
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    padding: 6px 18px; border-radius: 8px;
+}
+.sim-label { font-size: .7rem; color: var(--gray); margin-top: 6px; }
+
+/* barra de probabilidade */
+.prob-track-wrapper { margin-bottom: 24px; }
+.prob-track {
+    width: 100%; height: 38px;
+    border-radius: 19px; overflow: hidden;
+    display: flex;
+    background: rgba(255,255,255,.02);
+    border: 1px solid rgba(255,255,255,.05);
+    box-shadow: inset 0 2px 10px rgba(0,0,0,.5);
+}
+.prob-seg {
+    height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-h); font-weight: 800; font-size: .95rem;
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+.seg-brasil { background: linear-gradient(90deg,#007a33,var(--green)); color: #000; box-shadow: 0 0 15px var(--green-glow); }
+.seg-empate { background: #252833; color: var(--gray); }
+.seg-egito  { background: linear-gradient(90deg,var(--red),#8b0000); color: #fff; box-shadow: 0 0 15px var(--red-glow); }
+.seg-pct    { text-shadow: 0 1px 3px rgba(0,0,0,.4); }
+
+.track-legend {
+    display: flex; justify-content: center; gap: 28px; margin-top: 14px;
+    font-size: .8rem; color: var(--gray);
+}
+.track-legend span { display: flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot.green { background: var(--green); }
+.dot.gray  { background: var(--gray); }
+.dot.red   { background: var(--red); }
+
+/* quick stats */
+.quick-stats {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 14px;
+}
+.qs-box {
+    background: rgba(255,255,255,.02);
+    border: 1px solid rgba(255,255,255,.04);
+    border-radius: 12px; padding: 14px;
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px;
+}
+.qs-label { font-size: .72rem; color: var(--gray); text-transform: uppercase; letter-spacing: .04em; }
+.qs-val   { font-family: var(--font-h); font-size: 1.35rem; font-weight: 800; }
+.qs-val.green { color: var(--green); text-shadow: 0 0 10px var(--green-glow); }
+.qs-val.red   { color: var(--red);   text-shadow: 0 0 10px var(--red-glow); }
+.qs-val.white { color: var(--white); }
+.qs-sub { font-size: .75rem; color: var(--gray); }
+
+/* ================================================================
+   CAMPO TÁTICO
+   ================================================================ */
+.pitch-card { display: flex; flex-direction: column; }
+.pitch-container { position: relative; width: 100%; aspect-ratio: .65; }
+
+.pitch {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 50%,#0d1f10 0%,#050d07 100%);
+    border: 1.5px solid rgba(255,255,255,.1);
+    border-radius: 10px; overflow: hidden;
+}
+
+/* linhas do campo */
+.pitch-line { position: absolute; border: 1.5px solid rgba(255,255,255,.15); }
+.center-line {
+    top: 50%; left: 5%; right: 5%;
+    height: 0; border-left: none; border-right: none; border-top: 1.5px solid rgba(255,255,255,.15);
+}
+.center-circle {
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 22%; aspect-ratio: 1; border-radius: 50%;
+}
+.penalty-box { left: 50%; transform: translateX(-50%); width: 56%; height: 16%; }
+.penalty-top { top: 0; border-top: none; }
+.penalty-bot { bottom: 0; border-bottom: none; }
+
+/* jogadores */
+.players-layer { position: absolute; inset: 0; }
+.pitch-player {
+    position: absolute; transform: translate(-50%,-50%);
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; z-index: 2;
+}
+.p-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: #0f1318; font-size: .7rem; font-weight: 700; color: var(--gray);
+    transition: transform .2s;
+}
+.pitch-player:hover .p-avatar { transform: scale(1.18); }
+.team-brasil .p-avatar { border: 2px solid var(--green); box-shadow: 0 0 8px var(--green-glow); }
+.team-egito  .p-avatar { border: 2px solid var(--red);   box-shadow: 0 0 8px var(--red-glow); }
+.p-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.p-name {
+    font-size: .65rem; font-weight: 600;
+    background: rgba(0,0,0,.75); padding: 2px 5px; border-radius: 3px;
+    white-space: nowrap; margin-top: 3px; max-width: 80px;
+    overflow: hidden; text-overflow: ellipsis;
+    border: 1px solid rgba(255,255,255,.06);
+}
+
+.form-badge {
+    position: absolute; bottom: 8px; right: 8px;
+    background: rgba(0,0,0,.8);
+    border: 1px solid rgba(255,255,255,.1);
+    font-family: var(--font-h); font-weight: 800; font-size: .8rem;
+    padding: 3px 9px; border-radius: 5px;
+}
+
+/* tooltip */
+.pitch-tooltip {
+    position: fixed; z-index: 999; pointer-events: none;
+    background: rgba(10,12,18,.96);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: .8rem; min-width: 170px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.55);
+    opacity: 0; transition: opacity .15s;
+}
+.pitch-tooltip.show { opacity: 1; }
+.tt-title { font-family: var(--font-h); font-weight: 800; font-size: .88rem; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,.07); padding-bottom: 4px; }
+.tt-row   { display: flex; justify-content: space-between; gap: 18px; margin-bottom: 3px; }
+.tt-val   { font-weight: 700; }
+
+/* ================================================================
+   GRÁFICO
+   ================================================================ */
+.chart-wrap { position: relative; min-height: 280px; }
+
+/* ================================================================
+   MÉTRICAS
+   ================================================================ */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 14px;
+}
+.metric-box {
+    background: rgba(255,255,255,.02);
+    border: 1px solid rgba(255,255,255,.04);
+    border-radius: 10px; padding: 16px;
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px;
+}
+.m-label { font-size: .72rem; color: var(--gray); text-transform: uppercase; letter-spacing: .04em; }
+.m-val   { font-family: var(--font-h); font-size: 1.5rem; font-weight: 800; }
+.m-val.green { color: var(--green); text-shadow: 0 0 10px var(--green-glow); }
+.m-val.red   { color: var(--red);   text-shadow: 0 0 10px var(--red-glow); }
+.m-val.white { color: var(--white); }
+
+/* ================================================================
+   LISTAS: ARTILHEIROS / ASSISTENTES
+   ================================================================ */
+.prob-list { display: flex; flex-direction: column; gap: 10px; }
+.pl-item {
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,.03); padding-bottom: 8px;
+}
+.pl-item:last-child { border-bottom: none; }
+.pl-rank { font-family: var(--font-h); font-size: .8rem; font-weight: 700; color: var(--gray); width: 18px; }
+.pl-avatar {
+    width: 30px; height: 30px; border-radius: 50%; overflow: hidden;
+    background: #171b26; flex-shrink: 0;
+    border: 1.5px solid rgba(255,255,255,.08);
+}
+.pl-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.pl-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; }
+.pl-name { font-size: .85rem; font-weight: 600; }
+.pl-equipe { font-size: .72rem; color: var(--gray); }
+.pl-bar-bg { width: 100%; height: 4px; background: rgba(255,255,255,.05); border-radius: 2px; overflow: hidden; }
+.pl-bar-fill { height: 100%; border-radius: 2px; transition: width .6s; }
+.pl-pct { font-family: var(--font-h); font-size: .85rem; font-weight: 700; min-width: 46px; text-align: right; }
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+.app-footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 28px; text-align: center;
+    font-size: .78rem; color: var(--gray); margin-top: auto;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; }
+    .quick-stats { grid-template-columns: repeat(2,1fr); }
+    .metrics-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 560px) {
+    .matchup-banner { flex-direction: column; align-items: center; }
+    .team-side.team-brasil,
+    .team-side.team-egito { align-items: center; padding: 0; }
+    .quick-stats  { grid-template-columns: 1fr 1fr; }
+    .metrics-grid { grid-template-columns: 1fr; }
+}
