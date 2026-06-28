@@ -117,6 +117,7 @@ def peso_recencia(data_jogo, fator=0.001):
     return math.exp(-fator * max(0, dias))
 
 PESO_COMPETICAO = {
+    "group-stage":             1.50,  # Copa do Mundo fase de grupos - MAIOR PESO (dados reais da Copa)
     "World Cup Qualification": 1.00,
     "FIFA World Cup Qual":     1.00,
     "World Cup Qual":          1.00,
