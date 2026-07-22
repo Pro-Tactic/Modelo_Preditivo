@@ -1,0 +1,27 @@
+{
+  "event_id": "401860248",
+  "updated_at": "2026-07-22T18:06:22.417684+00:00",
+  "status": "STATUS_SCHEDULED",
+  "status_detail": "Wed, July 22nd at 7:30 PM EDT",
+  "clock": "0'",
+  "period": null,
+  "placar": {
+    "casa": {
+      "time": "Goiás",
+      "gols": "0"
+    },
+    "fora": {
+      "time": "Sport",
+      "gols": "0"
+    }
+  },
+  "formacoes": {
+    "casa": null,
+    "fora": null
+  },
+  "eventos": {
+    "gols": [],
+    "cartoes": [],
+    "substituicoes": []
+  }
+}

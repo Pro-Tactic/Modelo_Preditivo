@@ -1,0 +1,85 @@
+﻿event_id,data_jogo,time_marcou,adversario,mando,minuto,minuto_display,tempo,faixa_minuto,marcador,assistente,penalti,gol_contra
+401860068,2026-03-22T21:00Z,Goiás,América Mineiro,casa,9,9',1T,0-15,Anselmo Ramon,,True,False
+401860068,2026-03-22T21:00Z,Goiás,América Mineiro,casa,31,31',1T,31-45,Tadeu,,True,False
+401860068,2026-03-22T21:00Z,Goiás,América Mineiro,casa,86,86',2T,76-90,Gegê,Juninho,False,False
+401860068,2026-03-22T21:00Z,América Mineiro,Goiás,fora,91,90'+1',2T,90+,Gonzalo Mastriani,Willian,False,False
+401860075,2026-04-01T22:00Z,Londrina,Goiás,casa,33,33',1T,31-45,Bruno Santos,,False,False
+401860075,2026-04-01T22:00Z,Goiás,Londrina,fora,38,38',1T,31-45,Anselmo Ramon,,False,False
+401860075,2026-04-01T22:00Z,Londrina,Goiás,casa,59,59',2T,46-60,Iago Teles,Bruno Santos,False,False
+401860073,2026-04-01T22:00Z,Vila Nova,Sport,fora,59,59',2T,46-60,Janderson,Ryan Lima,False,False
+401860073,2026-04-01T22:00Z,Sport,Vila Nova,casa,78,78',2T,76-90,Perotti,Felipinho,False,False
+401860075,2026-04-01T22:00Z,Goiás,Londrina,fora,96,90'+6',2T,90+,Esli García,,False,False
+401860084,2026-04-04T23:30Z,Londrina,Sport,casa,22,22',1T,16-30,Bruno Santos,,False,False
+401860084,2026-04-04T23:30Z,Sport,Londrina,fora,67,67',2T,61-75,Chrystian Barletta,,True,False
+401860084,2026-04-04T23:30Z,Sport,Londrina,fora,87,87',2T,76-90,Perotti,Augusto Pucci,False,False
+401860085,2026-04-07T00:00Z,Goiás,Criciúma,casa,58,58',2T,46-60,Cadu,Anselmo Ramon,False,False
+401860095,2026-04-11T19:00Z,Juventude,Goiás,casa,39,39',1T,31-45,"Own Goal by Luiz Felipe, Goiás. Juventude 1, Goiás 0.",,False,True
+401860095,2026-04-11T19:00Z,Juventude,Goiás,casa,60,60',2T,46-60,Alan Kardec,Wadson,False,False
+401860092,2026-04-11T21:00Z,Avaí,Sport,fora,19,19',1T,16-30,Luiz Henrique,,True,False
+401860092,2026-04-11T21:00Z,Sport,Avaí,casa,54,45'+9',1T,46-60,Chrystian Barletta,,True,False
+401860092,2026-04-11T21:00Z,Sport,Avaí,casa,89,89',2T,76-90,Carlos de Pena,Marlon Douglas,False,False
+401860092,2026-04-11T21:00Z,Avaí,Sport,fora,96,90'+6',2T,90+,Sorriso,Zé Ricardo,False,False
+401860108,2026-04-19T21:00Z,Cuiabá,Goiás,fora,75,75',2T,61-75,Hernandes,Eliel,False,False
+401860108,2026-04-19T21:00Z,Cuiabá,Goiás,fora,82,82',2T,76-90,Hernandes,Weverson,False,False
+401860113,2026-04-25T23:30Z,Sport,Novorizontino,casa,52,52',2T,46-60,Perotti,Carlos de Pena,False,False
+401860116,2026-04-26T19:00Z,São Bernardo,Goiás,casa,93,90'+3',2T,90+,Felipe Garcia,,False,False
+401860123,2026-05-02T23:30Z,Goiás,Fortaleza,fora,24,24',1T,16-30,Gegê,,False,False
+401860123,2026-05-02T23:30Z,Fortaleza,Goiás,casa,54,54',2T,46-60,Vitinho,Maurício Mucuri,False,False
+401860123,2026-05-02T23:30Z,Fortaleza,Goiás,casa,61,61',2T,61-75,Vitinho,Pierre,False,False
+401860123,2026-05-02T23:30Z,Fortaleza,Goiás,casa,78,78',2T,76-90,Juan Miritello,Emanuel Brítez,False,False
+401860123,2026-05-02T23:30Z,Fortaleza,Goiás,casa,91,90'+1',2T,90+,Juan Miritello,Maílton,False,False
+401860126,2026-05-03T21:00Z,Sport,Ceará,casa,53,53',2T,46-60,Chrystian Barletta,,True,False
+401860126,2026-05-03T21:00Z,Sport,Ceará,casa,71,71',2T,61-75,Madson,Marlon Douglas,False,False
+401860133,2026-05-09T19:00Z,Goiás,Vila Nova,casa,79,79',2T,76-90,Anselmo Ramon,Diego Caito,False,False
+401860135,2026-05-09T21:30Z,Ponte Preta,Sport,casa,23,23',1T,16-30,Danilo Barcelos,Diego Tavares,False,False
+401860135,2026-05-09T21:30Z,Sport,Ponte Preta,fora,31,31',1T,31-45,Felipinho,Chrystian Barletta,False,False
+401860135,2026-05-09T21:30Z,Sport,Ponte Preta,fora,50,45'+5',1T,46-60,Chrystian Barletta,,True,False
+401860135,2026-05-09T21:30Z,Sport,Ponte Preta,fora,59,59',2T,46-60,Perotti,Chrystian Barletta,False,False
+401860144,2026-05-16T21:30Z,Goiás,Botafogo-SP,casa,73,73',2T,61-75,Kadu,Esli García,False,False
+401860149,2026-05-17T23:30Z,CRB,Sport,fora,39,39',1T,31-45,Mikael,,False,False
+401860149,2026-05-17T23:30Z,CRB,Sport,fora,59,59',2T,46-60,Danielzinho,,False,False
+401860149,2026-05-17T23:30Z,Sport,CRB,casa,78,78',2T,76-90,Perotti,Iury Castilho,False,False
+401860156,2026-05-23T23:30Z,Sport,Juventude,fora,82,82',2T,76-90,Iury Castilho,Chrystian Barletta,False,False
+401860152,2026-05-24T22:00Z,Goiás,Avaí,fora,71,71',2T,61-75,Bruno Sávio,Esli García,False,False
+401860152,2026-05-24T22:00Z,Goiás,Avaí,fora,78,78',2T,76-90,Anselmo Ramon,Diego Caito,False,False
+401873876,2026-05-30T19:00Z,Goiás,Atlético Goianiense,fora,47,47',2T,46-60,Anselmo Ramon,Esli García,False,False
+401873876,2026-05-30T19:00Z,Atlético Goianiense,Goiás,casa,73,73',2T,61-75,Guilherme Marques,,True,False
+401860170,2026-05-30T23:30Z,Sport,Náutico,casa,28,28',1T,16-30,Chrystian Barletta,,True,False
+401860170,2026-05-30T23:30Z,Sport,Náutico,casa,83,83',2T,76-90,Chrystian Barletta,Carlos de Pena,False,False
+401873961,2026-06-10T23:00Z,Novorizontino,Goiás,fora,32,32',1T,31-45,Robson,Rômulo,False,False
+401873961,2026-06-10T23:00Z,Novorizontino,Goiás,fora,56,56',2T,46-60,Robson,Nilson Castrillón,False,False
+401873961,2026-06-10T23:00Z,Novorizontino,Goiás,fora,70,70',2T,61-75,Rômulo,,True,False
+401873961,2026-06-10T23:00Z,Novorizontino,Goiás,fora,76,76',2T,76-90,Vinícius Paiva,Rômulo,False,False
+401873941,2026-06-11T00:00Z,Sport,Athletic,casa,60,60',2T,46-60,Augusto Pucci,Biel,False,False
+401873941,2026-06-11T00:00Z,Athletic,Sport,fora,66,66',2T,61-75,Ian Luccas,Diogo Batista,False,False
+401873962,2026-06-14T19:00Z,Goiás,Athletic,fora,48,45'+3',1T,46-60,Esli García,,False,False
+401873962,2026-06-14T19:00Z,Athletic,Goiás,casa,67,67',2T,61-75,Kauan Rodrigues,Jota,False,False
+401873945,2026-06-19T00:00Z,Sport,Atlético Goianiense,casa,25,25',1T,16-30,Perotti,Felipinho,False,False
+401873945,2026-06-19T00:00Z,Atlético Goianiense,Sport,fora,95,90'+5',2T,90+,Léo Jacó,Tito,False,False
+401873951,2026-06-21T21:30Z,Operário PR,Goiás,fora,6,6',1T,0-15,Hildeberto,Doka,False,False
+401873951,2026-06-21T21:30Z,Operário PR,Goiás,fora,41,41',1T,31-45,Vinícius Diniz,Gabriel Feliciano,False,False
+401873951,2026-06-21T21:30Z,Operário PR,Goiás,fora,48,45'+3',1T,46-60,Hildeberto,Pablo,False,False
+401873973,2026-06-28T21:30Z,Goiás,Náutico,fora,26,26',1T,16-30,Djalma Silva,Lucas Lima,False,False
+401873971,2026-06-28T21:30Z,Fortaleza,Sport,casa,28,28',1T,16-30,Rodrigo,Luan Freitas,False,False
+401873971,2026-06-28T21:30Z,Sport,Fortaleza,fora,69,69',2T,61-75,Perotti,,False,False
+401873971,2026-06-28T21:30Z,Fortaleza,Sport,casa,95,90'+5',2T,90+,Welliton,Juan Miritello,False,False
+401873994,2026-07-04T19:00Z,Criciúma,Sport,casa,29,29',1T,16-30,Waguininho,,False,False
+401873981,2026-07-04T23:00Z,Goiás,Ceará,casa,11,11',1T,0-15,Kadu,Lucas Lima,False,False
+401873981,2026-07-04T23:00Z,Goiás,Ceará,casa,80,80',2T,76-90,Juninho,Anselmo Ramon,False,False
+401860223,2026-07-10T23:00Z,Botafogo-SP,Sport,fora,25,25',1T,16-30,Zé Hugo,Everton Morelli,False,False
+401860223,2026-07-10T23:00Z,Botafogo-SP,Sport,fora,42,42',1T,31-45,Rafael Gava,,True,False
+401860223,2026-07-10T23:00Z,Sport,Botafogo-SP,casa,47,47',2T,46-60,Chrystian Barletta,,False,False
+401860223,2026-07-10T23:00Z,Sport,Botafogo-SP,casa,64,64',2T,61-75,Benevenuto,Clayson,False,False
+401860223,2026-07-10T23:00Z,Botafogo-SP,Sport,fora,76,76',2T,76-90,Patrick Brey,Rafael Gava,False,False
+401860223,2026-07-10T23:00Z,Sport,Botafogo-SP,casa,96,90'+6',2T,90+,Chrystian Barletta,,True,False
+401874000,2026-07-12T22:00Z,Goiás,CRB,fora,39,39',1T,31-45,Kadu,Rodrigo Soares,False,False
+401874000,2026-07-12T22:00Z,Goiás,CRB,fora,45,45',1T,31-45,Cadu,,True,False
+401874000,2026-07-12T22:00Z,CRB,Goiás,casa,70,70',2T,61-75,Thiaguinho,Mikael,False,False
+401874000,2026-07-12T22:00Z,CRB,Goiás,casa,74,74',2T,61-75,Mikael,,True,False
+401874007,2026-07-18T19:00Z,Operário PR,Sport,fora,6,6',1T,0-15,Aylon,Hildeberto,False,False
+401874005,2026-07-18T19:00Z,Goiás,Ponte Preta,fora,7,7',1T,0-15,Kadu,Cadu,False,False
+401874007,2026-07-18T19:00Z,Sport,Operário PR,casa,17,17',1T,16-30,Biel,,False,False
+401874005,2026-07-18T19:00Z,Ponte Preta,Goiás,casa,47,45'+2',1T,46-60,Élvis,,True,False
+401874005,2026-07-18T19:00Z,Goiás,Ponte Preta,fora,48,45'+3',1T,46-60,Kadu,Lucas Lima,False,False
+401874007,2026-07-18T19:00Z,Sport,Operário PR,casa,48,48',2T,46-60,Fábio Matheus,Biel,False,False
+401874007,2026-07-18T19:00Z,Operário PR,Sport,fora,86,86',2T,76-90,Vinícius Diniz,Gabriel Feliciano,False,False
