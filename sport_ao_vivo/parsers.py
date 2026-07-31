@@ -5,6 +5,19 @@ YELLOW_TYPES = {"yellow-card", "yellow card"}
 RED_TYPES = {"red-card", "red card", "yellow-red-card"}
 SUB_TYPES = {"substitution", "sub"}
 
+NAME_ALIASES = {
+    "Machado": "Filipe Machado",
+    "Esli Garcia": "Esli García",
+    "Pedro": "Pedro Martins",
+    "Marcelo": "Marcelo Ajul",
+}
+
+
+def _resolve_name(name):
+    if not name:
+        return name
+    return NAME_ALIASES.get(name, name)
+
 
 def _event_type(event):
     type_info = event.get("type") or {}
@@ -55,10 +68,16 @@ def parse_lineups(summary):
             name = (player.get("athlete") or {}).get("displayName")
             if not name:
                 continue
+            name = _resolve_name(name)
+            
+            # Tenta pegar a posição do jogador para dar contexto à IA
+            pos = (player.get("position") or {}).get("abbreviation")
+            display_name = f"{name} ({pos})" if pos else name
+            
             if player.get("starter"):
-                starters.append(name)
+                starters.append(display_name)
             else:
-                bench.append(name)
+                bench.append(display_name)
         lineups[side] = {
             "team": team,
             "team_id": team_id,
@@ -71,17 +90,20 @@ def parse_lineups(summary):
 
 def _extract_scorer(text):
     match = re.search(r"\.\s+([^()]+?)\s+\(", text)
-    return match.group(1).strip() if match else text
+    name = match.group(1).strip() if match else text
+    return _resolve_name(name)
 
 
 def _extract_assist(text):
     match = re.search(r"Assisted by ([^.]+?)(?: following| with|\.)", text)
-    return match.group(1).strip() if match else None
+    name = match.group(1).strip() if match else None
+    return _resolve_name(name) if name else None
 
 
 def _extract_card_player(text):
     match = re.match(r"([^()]+?)\s+\(", text)
-    return match.group(1).strip() if match else None
+    name = match.group(1).strip() if match else None
+    return _resolve_name(name) if name else None
 
 
 def _extract_sub(text):
@@ -91,7 +113,7 @@ def _extract_sub(text):
     player_in = match.group(1).strip()
     player_out = match.group(2).strip()
     reason = match.group(3).strip() if match.group(3) else None
-    return player_in, player_out, reason
+    return _resolve_name(player_in), _resolve_name(player_out), reason
 
 
 def parse_events(summary):

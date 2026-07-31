@@ -1,27 +1,245 @@
 {
   "event_id": "401860248",
-  "updated_at": "2026-07-22T18:06:22.417684+00:00",
-  "status": "STATUS_SCHEDULED",
-  "status_detail": "Wed, July 22nd at 7:30 PM EDT",
-  "clock": "0'",
-  "period": null,
+  "updated_at": "2026-07-23T01:30:09.514431+00:00",
+  "status": "STATUS_FULL_TIME",
+  "status_detail": "FT",
+  "clock": "90'+6'",
+  "period": 2,
   "placar": {
     "casa": {
       "time": "Goiás",
-      "gols": "0"
+      "gols": "1"
     },
     "fora": {
       "time": "Sport",
-      "gols": "0"
+      "gols": "1"
     }
   },
   "formacoes": {
-    "casa": null,
-    "fora": null
+    "casa": "4-2-3-1",
+    "fora": "4-3-3"
+  },
+  "escalacao": {
+    "Goiás": {
+      "team": "Goiás",
+      "team_id": "3395",
+      "formation": "4-2-3-1",
+      "starters": [
+        "Thiago Rodrigues (G)",
+        "Luis Fellipe (CD-L)",
+        "Luiz Felipe (CD-R)",
+        "Nicolas (LB)",
+        "Rodrigo Alves (RB)",
+        "Lucas Lima (AM)",
+        "Filipe Machado (LM)",
+        "Juninho (RM)",
+        "Cadu (F)",
+        "Kadu (AM-L)",
+        "Jean Carlos Alves Ferreira (AM-R)"
+      ],
+      "bench": [
+        "Esli García (SUB)",
+        "Lourenco (SUB)",
+        "Brayann (SUB)",
+        "Anselmo Ramon (SUB)",
+        "Murilo Camara (SUB)",
+        "Gegê (SUB)",
+        "Ezequiel (SUB)",
+        "Silva (SUB)",
+        "Guilherme Baldória (SUB)"
+      ]
+    },
+    "Sport": {
+      "team": "Sport",
+      "team_id": "7635",
+      "formation": "4-3-3",
+      "starters": [
+        "Thiago Couto (G)",
+        "Habraão (CD-L)",
+        "Marcelo Ajul (CD-R)",
+        "Felipinho (LB)",
+        "Augusto Pucci (RB)",
+        "José Gabriel (CM)",
+        "Pedro Martins (LM)",
+        "Biel (RM)",
+        "Pedro Perotti (F)",
+        "Clayson (LF)",
+        "Diego Hernández (RF)"
+      ],
+      "bench": [
+        "Mádson (SUB)",
+        "Caio Moura (SUB)",
+        "Halls (SUB)",
+        "Edson Pereira (SUB)",
+        "Dudu Teodora (SUB)",
+        "Zé Roberto (SUB)",
+        "Maron (SUB)",
+        "Adriel (SUB)",
+        "Kayky (SUB)",
+        "Claudinho (SUB)"
+      ]
+    }
   },
   "eventos": {
-    "gols": [],
-    "cartoes": [],
-    "substituicoes": []
+    "gols": [
+      {
+        "minute": 22,
+        "minute_display": "22'",
+        "half": "1T",
+        "bucket": "16-30",
+        "team_id": "7635",
+        "scorer": "Perotti",
+        "assist": "Biel",
+        "own_goal": false,
+        "penalty": false,
+        "text": "Goal! Goiás 0, Sport Recife 1. Perotti (Sport Recife) right footed shot from the right side of the box to the bottom right corner. Assisted by Biel with a cross."
+      },
+      {
+        "minute": 88,
+        "minute_display": "88'",
+        "half": "2T",
+        "bucket": "76-90",
+        "team_id": "3395",
+        "scorer": "Djalma Silva",
+        "assist": "Luiz Felipe",
+        "own_goal": false,
+        "penalty": false,
+        "text": "Goal! Goiás 1, Sport Recife 1. Djalma Silva (Goiás) left footed shot from long range on the right to the top left corner. Assisted by Luiz Felipe."
+      }
+    ],
+    "cartoes": [
+      {
+        "minute": 31,
+        "minute_display": "31'",
+        "half": "1T",
+        "bucket": "31-45",
+        "team_id": "3395",
+        "color": "amarelo",
+        "player": "Kadu",
+        "text": "Kadu (Goiás) is shown the yellow card for a bad foul."
+      },
+      {
+        "minute": 91,
+        "minute_display": "90'+1'",
+        "half": "2T",
+        "bucket": "90+",
+        "team_id": "3395",
+        "color": "amarelo",
+        "player": "Anselmo Ramon",
+        "text": "Anselmo Ramon (Goiás) is shown the yellow card for a bad foul."
+      },
+      {
+        "minute": 95,
+        "minute_display": "90'+5'",
+        "half": "2T",
+        "bucket": "90+",
+        "team_id": "3395",
+        "color": "amarelo",
+        "player": "Luiz Felipe",
+        "text": "Luiz Felipe (Goiás) is shown the yellow card."
+      }
+    ],
+    "substituicoes": [
+      {
+        "minute": 45,
+        "minute_display": "45'",
+        "half": "2T",
+        "team_id": "3395",
+        "player_in": "Lourenço",
+        "player_out": "Juninho",
+        "reason": null,
+        "text": "Substitution, Goiás. Lourenço replaces Juninho."
+      },
+      {
+        "minute": 61,
+        "minute_display": "61'",
+        "half": "2T",
+        "team_id": "3395",
+        "player_in": "Anselmo Ramon",
+        "player_out": "Jean Carlos",
+        "reason": null,
+        "text": "Substitution, Goiás. Anselmo Ramon replaces Jean Carlos."
+      },
+      {
+        "minute": 61,
+        "minute_display": "61'",
+        "half": "2T",
+        "team_id": "7635",
+        "player_in": "Dudu Teodora",
+        "player_out": "Diego Hernández",
+        "reason": null,
+        "text": "Substitution, Sport Recife. Dudu Teodora replaces Diego Hernández."
+      },
+      {
+        "minute": 72,
+        "minute_display": "72'",
+        "half": "2T",
+        "team_id": "3395",
+        "player_in": "Esli García",
+        "player_out": "Kadu",
+        "reason": null,
+        "text": "Substitution, Goiás. Esli García replaces Kadu."
+      },
+      {
+        "minute": 72,
+        "minute_display": "72'",
+        "half": "2T",
+        "team_id": "3395",
+        "player_in": "Gegê",
+        "player_out": "Lucas Lima",
+        "reason": null,
+        "text": "Substitution, Goiás. Gegê replaces Lucas Lima."
+      },
+      {
+        "minute": 80,
+        "minute_display": "80'",
+        "half": "2T",
+        "team_id": "3395",
+        "player_in": "Djalma Silva",
+        "player_out": "Rodrigo Soares",
+        "reason": null,
+        "text": "Substitution, Goiás. Djalma Silva replaces Rodrigo Soares."
+      },
+      {
+        "minute": 81,
+        "minute_display": "81'",
+        "half": "2T",
+        "team_id": "7635",
+        "player_in": "Kayky Almeida",
+        "player_out": "Clayson",
+        "reason": null,
+        "text": "Substitution, Sport Recife. Kayky Almeida replaces Clayson."
+      },
+      {
+        "minute": 87,
+        "minute_display": "87'",
+        "half": "2T",
+        "team_id": "7635",
+        "player_in": "Zé Roberto",
+        "player_out": "Perotti",
+        "reason": null,
+        "text": "Substitution, Sport Recife. Zé Roberto replaces Perotti."
+      },
+      {
+        "minute": 87,
+        "minute_display": "87'",
+        "half": "2T",
+        "team_id": "7635",
+        "player_in": "Adriel",
+        "player_out": "Biel",
+        "reason": "an injury",
+        "text": "Substitution, Sport Recife. Adriel replaces Biel because of an injury."
+      },
+      {
+        "minute": 87,
+        "minute_display": "87'",
+        "half": "2T",
+        "team_id": "7635",
+        "player_in": "Claudinho",
+        "player_out": "Pedro Martins",
+        "reason": null,
+        "text": "Substitution, Sport Recife. Claudinho replaces Pedro Martins."
+      }
+    ]
   }
 }

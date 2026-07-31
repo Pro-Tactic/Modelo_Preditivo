@@ -6,10 +6,11 @@ from datetime import datetime, timezone
 
 import config
 import espn_api
+import insight_engine
 import parsers
 
-STATE_PATH = os.path.join(config.DATA_DIR, "partida_ao_vivo.json")
-LOG_PATH = os.path.join(config.OUTPUTS_DIR, "insights_log.jsonl")
+STATE_PATH = config.STATE_PATH
+LOG_PATH = config.EVENTS_LOG_PATH
 
 
 def _now_iso():
@@ -39,6 +40,19 @@ def build_state(event):
     events = parsers.parse_events(summary)
     lineups = parsers.parse_lineups(summary)
 
+    # Fallback: quando rodando em modo --simulate, a competition vem vazia.
+    # Lê placar e status do header do summary da ESPN.
+    if not home or not away:
+        header_comp = ((summary.get("header") or {}).get("competitions") or [{}])[0]
+        comp_competitors = header_comp.get("competitors") or []
+        if not home:
+            home = next((c for c in comp_competitors if c.get("homeAway") == "home"), {})
+        if not away:
+            away = next((c for c in comp_competitors if c.get("homeAway") == "away"), {})
+        if not status_type:
+            status = header_comp.get("status") or {}
+            status_type = status.get("type") or {}
+
     return {
         "event_id": event["id"],
         "updated_at": _now_iso(),
@@ -53,6 +67,10 @@ def build_state(event):
         "formacoes": {
             "casa": lineups.get("home", {}).get("formation"),
             "fora": lineups.get("away", {}).get("formation"),
+        },
+        "escalacao": {
+            (home.get("team") or {}).get("displayName"): lineups.get("home", {}),
+            (away.get("team") or {}).get("displayName"): lineups.get("away", {}),
         },
         "eventos": {
             "gols": events["goals"],
@@ -108,7 +126,7 @@ def log_event(new_event):
         handle.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
-def process_once(event_id=None):
+def process_once(event_id=None, with_insights=True):
     previous = load_state()
     if event_id:
         event = {"id": event_id, "competitions": [{}]}
@@ -132,6 +150,12 @@ def process_once(event_id=None):
     for new_event in new_events:
         print(f"  >> NOVO EVENTO [{new_event['tipo']}] {new_event.get('minute')} - {new_event.get('text')}")
         log_event(new_event)
+        if with_insights:
+            try:
+                insight = insight_engine.generate_insight(current, new_event)
+                print(f"     [IA:{insight['generated_by']}/{insight['trigger']}] {insight['insight']}")
+            except Exception as error:
+                print(f"     ! falha ao gerar insight: {error}")
 
     return current
 

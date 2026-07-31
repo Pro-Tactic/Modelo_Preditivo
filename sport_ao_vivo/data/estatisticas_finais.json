@@ -1,0 +1,62 @@
+{
+  "intervalo": {
+    "Goiás": {
+      "posse_de_bola": "52%",
+      "chutes": 7,
+      "chutes_a_gol": 1,
+      "xg": 0.25,
+      "grandes_chances": 0,
+      "escanteios": 5,
+      "passes_completos": 215,
+      "ataques": 55,
+      "duelos_ganhos": 23,
+      "faltas": 6,
+      "cruzamentos": 18,
+      "cruzamentos_certos": 3
+    },
+    "Sport": {
+      "posse_de_bola": "48%",
+      "chutes": 3,
+      "chutes_a_gol": 1,
+      "xg": 0.18,
+      "grandes_chances": 1,
+      "escanteios": 1,
+      "passes_completos": 199,
+      "ataques": 35,
+      "duelos_ganhos": 18,
+      "faltas": 5,
+      "cruzamentos": 5,
+      "cruzamentos_certos": 2
+    }
+  },
+  "final": {
+    "Goiás": {
+      "posse_de_bola": "57%",
+      "chutes": 15,
+      "chutes_a_gol": 3,
+      "xg": 0.54,
+      "grandes_chances": 1,
+      "escanteios": 9,
+      "passes_completos": 438,
+      "ataques": 126,
+      "duelos_ganhos": 48,
+      "faltas": 15,
+      "cruzamentos": 37,
+      "cruzamentos_certos": 5
+    },
+    "Sport": {
+      "posse_de_bola": "43%",
+      "chutes": 6,
+      "chutes_a_gol": 3,
+      "xg": 0.26,
+      "grandes_chances": 1,
+      "escanteios": 2,
+      "passes_completos": 324,
+      "ataques": 68,
+      "duelos_ganhos": 43,
+      "faltas": 11,
+      "cruzamentos": 7,
+      "cruzamentos_certos": 2
+    }
+  }
+}
